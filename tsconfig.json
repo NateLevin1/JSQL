@@ -3,7 +3,7 @@
         "noImplicitAny": true,
         "removeComments": true,
         "module": "ES6",
-        "target": "ES6",
+        "target": "ES5",
         "outDir": "dist",
         "sourceMap": true,
         "rootDir": "src",
