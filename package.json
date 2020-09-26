@@ -25,13 +25,19 @@
     "@types/jest": "^26.0.14",
     "babel-jest": "^26.3.0",
     "clean-webpack-plugin": "^3.0.0",
+    "css-loader": "^4.3.0",
+    "file-loader": "^6.1.0",
     "html-webpack-plugin": "^4.5.0",
     "jest": "^26.4.2",
+    "monaco-editor-webpack-plugin": "^2.0.0",
+    "style-loader": "^1.2.1",
     "ts-loader": "^8.0.4",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "monaco-editor": "^0.21.1"
+  }
 }
