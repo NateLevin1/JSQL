@@ -1,5 +1,4 @@
-import "./monaco/setupMonaco";
-const testsWorking = ()=>{
-    return 0;
-}
-export default testsWorking;
+import "./visuals/monaco/setupMonaco";
+import "./visuals/middlebar/run";
+import "./visuals/middlebar/middlebar.css";
+import "./visuals/bodyStyles.css";

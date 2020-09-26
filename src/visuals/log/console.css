@@ -1,0 +1,22 @@
+#output {
+    font-family: sans-serif;
+    padding:0.5em;
+    background-color: rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    border: 2px solid black;
+    height:20%;
+    flex-grow: 1;
+    overflow: auto;
+}
+.log {
+    color: black;
+}
+.runlog {
+    color: rgb(2, 85, 2);
+}
+.error {
+    color: rgb(197, 0, 0);
+}
+.warn {
+    color: rgb(243, 117, 0);
+}

@@ -1,0 +1,5 @@
+#monaco-container {
+    flex-grow: 10;
+    max-height: 60vh;
+    width:100%;
+}
