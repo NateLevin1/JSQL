@@ -2,11 +2,12 @@
     "compilerOptions": {
         "noImplicitAny": true,
         "removeComments": true,
-        "module": "commonjs",
-        "target": "ES5",
+        "module": "ES6",
+        "target": "ES6",
         "outDir": "dist",
         "sourceMap": true,
-        "rootDir": "src"
+        "rootDir": "src",
+        "moduleResolution": "node"
     },
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", "tests", "**/*.test.ts"]
 }

@@ -1,6 +1,4 @@
 const testsWorking = ()=>{
     return 0;
 }
-module.exports = {
-    testsWorking: testsWorking
-}
+export default testsWorking;
