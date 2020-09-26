@@ -1,0 +1,31 @@
+{
+  "name": "jsql",
+  "version": "0.1.0",
+  "description": "Interface with IndexedDB using SQL queries.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest",
+    "start": "npx tsc -w;"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UltimatePro-Grammer/JSQL.git"
+  },
+  "author": "UltimateProGrammer",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/UltimatePro-Grammer/JSQL/issues"
+  },
+  "homepage": "https://github.com/UltimatePro-Grammer/JSQL#readme",
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/jest": "^26.0.14",
+    "babel-jest": "^26.3.0"
+  }
+}
