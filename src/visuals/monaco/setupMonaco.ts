@@ -1,5 +1,6 @@
 import * as monaco from 'monaco-editor';
 import "./monaco.css";
+import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: [
       'function x() {',
@@ -17,10 +18,10 @@ document.onkeydown = (event)=>{
   if(isCtrlDown) {
     if(event.key == "=" || event.key == "+") {
       event.preventDefault();
-      editor.updateOptions({fontSize: editor.getOption(monaco.editor.EditorOption.fontSize) as number + 5});
+      zoom(5);
     } else if(event.key == "-") {
       event.preventDefault();
-      editor.updateOptions({fontSize: editor.getOption(monaco.editor.EditorOption.fontSize) as number - 5});
+      zoom(-5);
     }
   }
 }
