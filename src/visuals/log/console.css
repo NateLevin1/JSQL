@@ -14,9 +14,18 @@
 .runlog {
     color: rgb(2, 85, 2);
 }
+.runlog:not(:first-of-type) {
+    margin-top:2em;
+}
 .error {
     color: rgb(216, 0, 0);
 }
+.error::before {
+    content:"☠ "
+}
 .warn {
     color: rgb(219, 106, 0);
+}
+.warn::before {
+    content:"☢ "
 }
