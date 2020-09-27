@@ -5,5 +5,6 @@ const append = (className: string, ...args: any[])=>{
     node.textContent = args.join("");
     node.classList.add(className);
     log.appendChild(node);
+    log.scrollTop = log.scrollHeight;
 }
 export default append;
