@@ -44,7 +44,7 @@ FROM (identifier|*)
      [^^^^^^^^^^^^]
 ```
 If an identifier has a specific use (e.g. it needs to be a table name or column name), the use is indicated in these docs via a colon and then the use.
-```
+```sql
 FROM (identifier: tablename)
      [^^^^^^^^^^^^]
 ```
@@ -83,10 +83,10 @@ SELECT name FROM months WHERE week = 1;
 A Predicate is something which evaluates to a true or false value. Notably, there is no `unknown` value, a predicate can only evaluate to `true` or `false`.
 ```sql
 WHERE x = 1
-	 [^^^^]
+     [^^^^]
 ```
 <span name="def-expression">**Expression**</span>
-An expression is a part of a clause or predicate that evaluates to anything that can be [structure cloned](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This includes strings, numbers, arrays, object literals, Blobs, and many other data types. Expressions can contain operators.
+An expression is a part of a clause or predicate that evaluates to anything that can be [structure cloned](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm). This includes strings, numbers, arrays, object literals, Blobs, and many other data types. Expressions can contain *javascript* operators. Note that at this time expressions cannot contain identifiers.
 ```js
 'text', 5, [1,2,3,4] {object: "literal"}, new Blob(), 5+1
 ```
@@ -143,10 +143,10 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 **Syntax**
 Get data from a table. The `FROM` keyword is required and is used to indicate which table the query should be executed on. The optional `WHERE` keyword is used to describe 
 ```sql
-SELECT (identifier: columnName|*) FROM (identifier: tableName) [WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*) FROM (identifier: tableName) [WHERE identifer {=operator=} expression]
 ```
 **Return Value**
-An array of objects that contain the matched data. The objects have the keys specified in the first expression (or in the case of `*` have the keys of all columns in the database).
+An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
 
 **Example**
 ```js

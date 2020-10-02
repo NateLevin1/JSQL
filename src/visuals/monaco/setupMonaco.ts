@@ -3,10 +3,13 @@ import "./monaco.css";
 import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: [
-      'function x() {',
-      '\tconsole.log("Hello world!");',
-      '}',
-      'x();'
+      "// JSQL has been auto-imported",
+      "const createAndQuery = async ()=>{",
+      "    const db = new Table;",
+      "    const query = db.query(`SELECT * FROM ${db.name}`);",
+      "    console.log(query);",
+      "}",
+      "createAndQuery();"
     ].join('\n'),
     language: 'javascript',
     theme: "vs-dark",

@@ -4,7 +4,9 @@
   "description": "Interface with IndexedDB using SQL queries.",
   "private": true,
   "scripts": {
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest lib",
+    "test-ui": "./node_modules/.bin/jest visuals",
+    "test-all": "./node_modules/.bin/jest",
     "get-coverage": "./node_modules/.bin/jest --coverage",
     "start": "webpack-dev-server --open",
     "build": "webpack"
