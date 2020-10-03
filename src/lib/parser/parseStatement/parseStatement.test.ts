@@ -1,20 +1,18 @@
 import { clauses } from "../parseClause/parseClause";
 import parseStatement from "./parseStatement";
+import removeNoise from "../removeNoise/removeNoise";
+
+jest.mock("../removeNoise/removeNoise");
 
 clauses.register("SELECT", ["identifier"]);
 clauses.register("FROM", ["identifier"]);
 
-test("Parses correctly with a semicolon", ()=>{
-    expect(parseStatement("SELECT * from db;")).toStrictEqual(
-        [
-            { keyword: "SELECT", items:[{ identifier: "*"  }] },
-            { keyword: "FROM",   items:[{ identifier: "db" }] }
-        ]
-    );
-});
+test("Parses SELECT correctly", ()=>{
+    let statement = "SELECT * from db";
+    // @ts-ignore
+    removeNoise.mockReturnValue(statement);
 
-test("Parses correctly without a semicolon", ()=>{
-    expect(parseStatement("SELECT * from db")).toStrictEqual(
+    expect(parseStatement(statement)).toStrictEqual(
         [
             { keyword: "SELECT", items:[{ identifier: "*"  }] },
             { keyword: "FROM",   items:[{ identifier: "db" }] }

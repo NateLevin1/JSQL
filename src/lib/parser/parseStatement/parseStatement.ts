@@ -1,11 +1,10 @@
 import { parseClause } from "../parseClause/parseClause";
+import removeNoise from "../removeNoise/removeNoise";
 
 // a statement looks like "SELECT * from db;"
 export default function parseStatement(statement: string) {
-    // remove ending semicolon
-    if(statement[statement.length - 1] == ";") {
-        statement = statement.slice(0, statement.length-1);
-    }
+    // clean up
+    statement = removeNoise(statement);
 
     // @ts-ignore
     const getKeywordAndItems = ({keyword, items})=>({keyword, items});
