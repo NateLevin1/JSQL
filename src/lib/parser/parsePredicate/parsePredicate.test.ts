@@ -14,7 +14,7 @@ test("Parsing a predicate with number returns proper values", ()=>{
     parseOperator.mockReturnValueOnce({operator: "=", rest:" 1"});
     // @ts-ignore
     parseExpression.mockReturnValueOnce({expression: "1", rest:""});
-    expect(parsePredicate("x = 1")).toStrictEqual({left:"x", operator:"=", right:"1"});
+    expect(parsePredicate("x = 1")).toStrictEqual({left:"x", operator:"=", right:"1", rest:""});
 });
 test("Parsing a predicate with math returns proper values", ()=>{
     // @ts-ignore
@@ -23,7 +23,7 @@ test("Parsing a predicate with math returns proper values", ()=>{
     parseOperator.mockReturnValueOnce({operator: "=", rest:" 1 + 1"});
     // @ts-ignore
     parseExpression.mockReturnValueOnce({expression: "1 + 1", rest:""});
-    expect(parsePredicate("x = 1 + 1")).toStrictEqual({left:"x", operator:"=", right:"1 + 1"});
+    expect(parsePredicate("x = 1 + 1")).toStrictEqual({left:"x", operator:"=", right:"1 + 1", rest:""});
 });
 test("Parsing a predicate with string returns proper values", ()=>{
     // @ts-ignore
@@ -32,7 +32,7 @@ test("Parsing a predicate with string returns proper values", ()=>{
     parseOperator.mockReturnValueOnce({operator: "=", rest:" 'Hello World'"});
     // @ts-ignore
     parseExpression.mockReturnValueOnce({expression: "'Hello World'", rest:""});
-    expect(parsePredicate("x = 'Hello World'")).toStrictEqual({left:"x", operator:"=", right:"'Hello World'"});
+    expect(parsePredicate("x = 'Hello World'")).toStrictEqual({left:"x", operator:"=", right:"'Hello World'", rest:""});
 });
 test("Parsing a predicate with identifier returns proper values", ()=>{
     // @ts-ignore
@@ -41,5 +41,5 @@ test("Parsing a predicate with identifier returns proper values", ()=>{
     parseOperator.mockReturnValueOnce({operator: "=", rest:" ident"});
     // @ts-ignore
     parseExpression.mockReturnValueOnce({expression: "ident", rest:""});
-    expect(parsePredicate("x = ident")).toStrictEqual({left:"x", operator:"=", right:"ident"});
+    expect(parsePredicate("x = ident")).toStrictEqual({left:"x", operator:"=", right:"ident", rest:""});
 });
