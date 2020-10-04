@@ -41,6 +41,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "dexie": "^3.0.2",
     "monaco-editor": "^0.21.1"
   }
 }

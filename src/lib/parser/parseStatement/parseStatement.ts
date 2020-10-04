@@ -9,14 +9,14 @@ export default function parseStatement(statement: string) {
     // @ts-ignore
     const getKeywordAndItems = ({keyword, items})=>({keyword, items});
 
-    let clauses = [];
+    let clauses: {keyword: string, items:any[]}[] = [];
     let rest = statement;
     while(rest !== "") {
         const parsedClause = parseClause(rest);
         rest = parsedClause.rest;
-        clauses.push(
-            getKeywordAndItems(parsedClause)
-        );
+        
+        // @ts-ignore
+        clauses.push( getKeywordAndItems(parsedClause) );
     }
     return clauses;
 }

@@ -51,8 +51,7 @@ FROM (identifier: tablename)
 
 For example, a simple `SELECT` will look like the following in these docs
 ```sql
-SELECT (identifier|*) FROM (identifier: tablename)
-[WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
 ```
 
 ## Term Definitions
@@ -143,7 +142,7 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 **Syntax**
 Get data from a table. The `FROM` keyword is required and is used to indicate which table the query should be executed on. The optional `WHERE` keyword is used to describe 
 ```sql
-SELECT (identifier: columnName|*) FROM (identifier: tableName) [WHERE identifer {=operator=} expression]
+SELECT (identifier: columnName|*) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
 ```
 **Return Value**
 An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
