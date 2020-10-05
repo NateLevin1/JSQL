@@ -1,5 +1,5 @@
+import { Table } from "dexie";
 import stores from "../stores";
-import Dexie from "dexie";
 
 export default async function runSelect(clauses: {keyword: string, items:any[]}[]) {
     const column = clauses[0].items[0];
@@ -41,45 +41,35 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
     return Promise.all(results);
 }
 
-const getContents = (store: Dexie, wherePredicate: (undefined|{left: string, operator: string, right: string}))=>{
-    let shouldToArray = store;
+const getContents = (store: Table, wherePredicate: (undefined|{left: string, operator: string, right: string}))=>{
+    let shouldToArray = store as any;
     if(wherePredicate) {
-        // @ts-ignore
         shouldToArray = shouldToArray.where(wherePredicate.left);
         const right = eval(wherePredicate.right)
         switch(wherePredicate.operator) {
             case "=":
-                // @ts-ignore
                 shouldToArray = shouldToArray.equals(right);
                 break;
             case "IGNORECASE=":
-                // @ts-ignore
                 shouldToArray = shouldToArray.equalsIgnoreCase(right);
                 break;
             case "<>":
             case "!=":
-                // @ts-ignore
                 shouldToArray = shouldToArray.notEqual(right);
                 break;
             case ">":
-                // @ts-ignore
                 shouldToArray = shouldToArray.above(right);
                 break;
             case ">=":
-                // @ts-ignore
                 shouldToArray = shouldToArray.aboveOrEqual(right);
                 break;
             case "<":
-                // @ts-ignore
                 shouldToArray = shouldToArray.below(right);
                 break;
             case "<=":
-                // @ts-ignore
                 shouldToArray = shouldToArray.belowOrEqual(right);
                 break;
         }
     }
-    
-    // @ts-ignore - typescript doesn't like Dexie, so this is the only solution without knowing the column name
     return shouldToArray.toArray();
 }

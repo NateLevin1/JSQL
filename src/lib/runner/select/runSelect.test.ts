@@ -1,6 +1,6 @@
 import stores from "../stores";
 import runSelect from "./runSelect";
-import Dexie from "dexie";
+import { Table } from "dexie";
 jest.mock("../stores");
 
 test("queries correct table", ()=>{
@@ -11,7 +11,7 @@ test("queries correct table", ()=>{
                 resolve(dbItems);
             });
         }
-    } as unknown as Dexie;
+    } as unknown as Table;
     return runSelect([{keyword: "SELECT", items:["*"]}, {keyword: "FROM", items:["db"]}]).then(result=>{
         expect(result).toStrictEqual(dbItems);
     });
@@ -25,7 +25,7 @@ test("only returns the data if select items is not *", ()=>{
                 resolve(dbItems);
             });
         }
-    } as unknown as Dexie;
+    } as unknown as Table;
     return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}]).then(result=>{
         expect(result).toStrictEqual(dbItems.map(v=>v.n));
     });
@@ -39,7 +39,7 @@ test("queries all tables if no FROM clause", ()=>{
                 resolve(dbItems);
             });
         }
-    } as unknown as Dexie;
+    } as unknown as Table;
 
     stores.db2 = {
         toArray: ()=>{
@@ -47,7 +47,7 @@ test("queries all tables if no FROM clause", ()=>{
                 resolve(dbItems);
             });
         }
-    } as unknown as Dexie;
+    } as unknown as Table;
 
 
     return runSelect([ {keyword: "SELECT", items:["*"]} ]).then(result=>{
@@ -132,7 +132,7 @@ describe("WHERE clause", ()=>{
                 }
             }
         }
-    } as unknown as Dexie;
+    } as unknown as Table;
     test("= works", ()=>{
         stores.db = newDB;
         return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"=", right:"1"}]}]).then(result=>{

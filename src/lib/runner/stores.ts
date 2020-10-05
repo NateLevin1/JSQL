@@ -1,3 +1,6 @@
-import Dexie from "dexie";
-const stores: {[key: string]: Dexie} = {}
+import Dexie, { Table } from "dexie";
+export const db = new Dexie("JSQL");
+export let version = 0;
+export const increaseVersion = ()=>{ version++; };
+const stores: {[key: string]: Table} = {}
 export default stores;
