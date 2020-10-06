@@ -1,10 +1,11 @@
-import { db, increaseVersion, version } from "../stores";
+import stores, { db, increaseVersion, version, storesColumns } from "../stores";
 
 export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     const [whatCreate, tableName, tableStructure] = clauses[0].items as [string, string, string];
-    if(whatCreate != "TABLE") {
+    if(whatCreate.toUpperCase() !== "TABLE") {
         throw new Error("CREATE clause can only make tables. Instead got "+whatCreate);
     }
+    storesColumns[tableName] = [];
     increaseVersion();
     // see https://dexie.org/docs/Version/Version.stores() for the format of the string
     let stringStructure = "";
@@ -25,6 +26,8 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
             column = column.slice(sliceFrom);
 
         let [columnName, ...flags] = column.split(" ");
+
+        storesColumns[tableName].push(columnName);
 
         flags = flags.map((val)=>{
             switch(val) {
@@ -50,4 +53,9 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
         [tableName]: stringStructure
     });
     db.open();
+    Object.defineProperty(stores, tableName, {
+        // @ts-ignore
+        get: ()=>{ return db[tableName]; },
+        configurable: true
+    });
 }

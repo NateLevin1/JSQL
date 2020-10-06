@@ -12,15 +12,15 @@ test("Identifiers work properly", ()=>{
     clauses.register("SELECT", ["identifier"]);
     // @ts-ignore
     parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
-    expect(parseClause("SELECT *")).toStrictEqual({keyword: "SELECT", items:[{identifier: "*"}], rest:""});
+    expect(parseClause("SELECT *")).toStrictEqual({keyword: "SELECT", items:["*"], rest:""});
 });
 
 test("Identifiers work properly with register & parsed & requiredItems as wrong case", ()=>{
     clauses.clauses = {};
     clauses.register("select", ["IDENTIFIER"]);
     // @ts-ignore
-    parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
-    expect(parseClause("select *")).toStrictEqual({keyword: "SELECT", items:[{identifier: "*"}], rest:""});
+    parseIdentifier.mockReturnValueOnce({identifier: "select", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
+    expect(parseClause("select *")).toStrictEqual({keyword: "SELECT", items:["*"], rest:""});
 });
 
 test("Predicates work properly", ()=>{
@@ -40,7 +40,17 @@ test("Expressions work properly", ()=>{
     parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" 1+1"});
     // @ts-ignore
     parseExpression.mockReturnValueOnce({expression:"1+1", rest:""});
-    expect(parseClause("TEST 1+1")).toStrictEqual({keyword: "TEST", items:[{ expression: "1+1" }], rest:""});
+    expect(parseClause("TEST 1+1")).toStrictEqual({keyword: "TEST", items:["1+1"], rest:""});
+});
+
+test("rests works properly", ()=>{
+    clauses.clauses = {};
+    clauses.register("TEST", ["rest"]);
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" some stuff here"});
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "some", rest:" stuff here"});
+    expect(parseClause("TEST some stuff here")).toStrictEqual({keyword: "TEST", items:["some stuff here" ], rest:""});
 });
 
 test("Invalid keyword throws", ()=>{

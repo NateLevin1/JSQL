@@ -82,3 +82,14 @@ test("Works correctly with spaces", ()=>{
 
     expect(db.version).toBeCalled();
 });
+
+test("Works correctly with lowercase TABLE", ()=>{
+    expectFn = (newStores)=>{
+        expect(newStores).toStrictEqual({
+            "table":"one"
+        });
+    }
+    runCreate([{keyword: "CREATE", items:["table", "table", "(one)"]}]);
+
+    expect(db.version).toBeCalled();
+});

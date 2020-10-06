@@ -30,7 +30,7 @@ export function parseClause(str: string) {
         switch(val) {
             case "identifier":
                 const parsedIdentifier = parseIdentifier(restOfStr);
-                clauseAST.items.push({identifier: parsedIdentifier.identifier});
+                clauseAST.items.push(parsedIdentifier.identifier);
                 restOfStr = parsedIdentifier.rest;
                 break;
             case "predicate":
@@ -40,8 +40,13 @@ export function parseClause(str: string) {
                 break;
             case "expression":
                 const parsedExpression = parseExpression(restOfStr);
-                clauseAST.items.push({expression: parsedExpression.expression});
+                clauseAST.items.push(parsedExpression.expression);
                 restOfStr = parsedExpression.rest;
+                break;
+            case "rest":
+                const removedSpace = parseIdentifier(restOfStr);
+                clauseAST.items.push(removedSpace.identifier+removedSpace.rest);
+                restOfStr = "";
                 break;
             default:
                 throw "Unknown value type "+val;
@@ -53,6 +58,6 @@ export function parseClause(str: string) {
 
 interface IClauseAST {
     keyword: string;
-    items: {[key: string]: any}[];
+    items: ({[key: string]: any}|string)[];
     rest: string;
 }

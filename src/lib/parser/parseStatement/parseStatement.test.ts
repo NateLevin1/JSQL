@@ -14,8 +14,8 @@ test("Parses SELECT correctly", ()=>{
 
     expect(parseStatement(statement)).toStrictEqual(
         [
-            { keyword: "SELECT", items:[{ identifier: "*"  }] },
-            { keyword: "FROM",   items:[{ identifier: "db" }] }
+            { keyword: "SELECT", items:["*"] },
+            { keyword: "FROM",   items:["db"] }
         ]
     );
 });
