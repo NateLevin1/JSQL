@@ -10,13 +10,10 @@ export default function parseAndRun(statement: string) {
 
     switch(statementType) {
         case "SELECT":
-            runSelect(clauses);
-            break;
+            return runSelect(clauses);
         case "CREATE":
-            runCreate(clauses);
-            break;
+            return runCreate(clauses);
         case "INSERT":
-            runInsert(clauses)
-            break;
+            return runInsert(clauses)
     }
 }

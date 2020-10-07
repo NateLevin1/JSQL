@@ -45,7 +45,7 @@ const getContents = (store: Table, wherePredicate: (undefined|{left: string, ope
     let shouldToArray = store as any;
     if(wherePredicate) {
         shouldToArray = shouldToArray.where(wherePredicate.left);
-        const right = eval(wherePredicate.right)
+        const right = eval(wherePredicate.right);
         switch(wherePredicate.operator) {
             case "=":
                 shouldToArray = shouldToArray.equals(right);

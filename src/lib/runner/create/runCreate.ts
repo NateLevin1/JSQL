@@ -17,7 +17,8 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     }
 
     let columns = fixedTableStructure.split(",");
-    for(let column of columns) {
+    for(var n = 0; n < columns.length; n++) {
+        let column = columns[n];
         // remove starting spaces
         let sliceFrom = 0;
         while(column[sliceFrom] === " ")
@@ -27,18 +28,26 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
 
         let [columnName, ...flags] = column.split(" ");
 
-        storesColumns[tableName].push(columnName);
+        let canPushToStoreColumns = true;
 
         flags = flags.map((val)=>{
             switch(val) {
                 case "AUTO_INCREMENT":
+                    canPushToStoreColumns = false;
                     return "++";
                 case "UNIQUE":
                     return "&";
                 case "NO_INDEX": // Can't `continue` across a `map` call, so we have to use `includes` later.
+                    if(n === 0) { // first column is primary key; must be indexable
+                        throw new Error("Saw NO_INDEX flag on first column: The first column is the primary key; It must be indexable.")
+                    }
                     return "NO_INDEX";
             }
         });
+
+        if(canPushToStoreColumns) {
+            storesColumns[tableName].push(columnName);
+        }
 
         if(flags.includes("NO_INDEX")) {
             continue;
@@ -47,15 +56,24 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
         stringStructure += `${flags.join("")}${columnName},`
     }
 
-    stringStructure = stringStructure.slice(0, stringStructure.length-1); // slice to remove ending comma
+    
 
-    db.version(version).stores({
-        [tableName]: stringStructure
-    });
-    db.open();
+    stringStructure = stringStructure.slice(0, stringStructure.length-1); // slice to remove ending comma
+    if(db.isOpen()) {
+        db.close();
+    }
     Object.defineProperty(stores, tableName, {
         // @ts-ignore
         get: ()=>{ return db[tableName]; },
         configurable: true
+    });
+    return new Promise(resolve=>{
+        db.on("ready", ()=>{
+            resolve();
+        });
+        db.version(version).stores({
+            [tableName]: stringStructure
+        });
+        db.open();
     });
 }

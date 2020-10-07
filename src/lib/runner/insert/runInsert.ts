@@ -21,14 +21,16 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
     }
     
     // valuesExpr is in the form (1,'joe'), (2, 'bill')
-    let newRows = valuesExpr.split(/, (?= {0,}\()/g);
+    let newRows = valuesExpr.split(/, ?(?= {0,}\()/g);
     let processedNewRows: {[key: string]: any}[] = [];
     for (var i = 0; i < newRows.length; i++) {
         let row = newRows[i];
         // remove parens
         row = row.slice(1, row.length-1);
 
-        let valAtColumns = row.split(",").map(val=>Function(`"use strict"; return (${val})`)()); // eval to turn string numbers into numbers etc
+        let valAtColumns = row.split(",").map(val=>{  // eval to turn string numbers into numbers etc
+            return Function(`"use strict"; return (${val})`)();
+        });
         processedNewRows[i] = {};
 
         for(var j = 0; j < storesColumns[tableName].length; j++) {
@@ -36,5 +38,5 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
         }
     }
 
-    table.bulkAdd(processedNewRows);
+    return table.bulkAdd(processedNewRows);
 }

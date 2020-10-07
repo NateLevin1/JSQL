@@ -1,5 +1,5 @@
 import runCreate from "./runCreate";
-import { db, increaseVersion } from "../stores";
+import { db, increaseVersion, storesColumns } from "../stores";
 
 jest.mock("../stores");
 
@@ -61,15 +61,15 @@ test("UNIQUE works", ()=>{
 test("NO_INDEX works", ()=>{
     expectFn = (newStores)=>{
         expect(newStores).toStrictEqual({
-            "table":""
+            "table":"++id"
         });
     }
-    runCreate([{keyword: "CREATE", items:["TABLE", "table", "(name NO_INDEX)"]}]);
+    runCreate([{keyword: "CREATE", items:["TABLE", "table", "(id AUTO_INCREMENT, name NO_INDEX)"]}]);
 
     expect(db.version).toBeCalled();
 });
-test("NO_INDEX works", ()=>{
-    expect(()=>runCreate([{keyword: "CREATE", items:["NOTTABLE", "table", "(name NO_INDEX)"]}])).toThrow();
+test("items[0] must be table", ()=>{
+    expect(()=>runCreate([{keyword: "CREATE", items:["NOTTABLE", "table", "(id AUTO_INCREMENT, name NO_INDEX)"]}])).toThrow();
 });
 
 test("Works correctly with spaces", ()=>{
@@ -92,4 +92,18 @@ test("Works correctly with lowercase TABLE", ()=>{
     runCreate([{keyword: "CREATE", items:["table", "table", "(one)"]}]);
 
     expect(db.version).toBeCalled();
+});
+test("first column must be indexable", ()=>{
+    expect(()=>runCreate([{keyword: "CREATE", items:["TABLE", "table", "(name NO_INDEX)"]}])).toThrow();
+});
+
+test("Does not add to storesColumns if auto increment", ()=>{
+    expectFn = (newStores)=>{
+        expect(newStores).toStrictEqual({
+            "name":"++id,storeMe"
+        });
+    }
+    runCreate([{keyword: "CREATE", items:["TABLE", "name", "(id AUTO_INCREMENT, storeMe)"]}]);
+    expect(db.version).toBeCalled();
+    expect(storesColumns.name).toStrictEqual(["storeMe"]);
 });

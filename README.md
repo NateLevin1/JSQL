@@ -108,6 +108,9 @@ SET num = num + 1
 ### Line termination
 Lines can be terminated with a semicolon, though this is not required.
 
+### Excess whitespace
+All extra whitespace is removed during parsing. Newlines, double spaces, tabs etc. are converted to spaces during parsing.
+
 ### Comments
 Single line comments can be started with a `--`. Multiline comments are indicated with a `/*` followed by a `*/`. Unlike MySQL, single line comments do not need a space after them to be comments.
 ```sql
@@ -165,7 +168,7 @@ console.log(result ==
 ```
 ## CREATE TABLE
 **Syntax**
-Create a new table with the name `nameOfNewTable`. Each column is defined with an identifer and optional flags, which means **no datatypes**. Each column should be separated by a comma.
+Create a new table with the name `nameOfNewTable`. Each column is defined with an identifer and optional flags, which means **no datatypes**. Each column should be separated by a comma. **Note that the primary key is *always* the first column, and thus the first column must be indexable.**
 ```sql
 CREATE TABLE (identifier: nameOfNewTable) (
 	(identifier: column1Name) [AUTO_INCREMENT] [NO_INDEX] [UNIQUE],
