@@ -1,5 +1,5 @@
 import visualConsole from "../log/console";
-const evaluate = (content: string)=>{
+const evaluate = async (content: string)=>{ // async so eval is async
     // substitute console methods so that it will show up on both the actual console and the visual console
     const oldLog = console.log;
     const oldWarn = console.warn;
