@@ -67,6 +67,8 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
         get: ()=>{ return db[tableName]; },
         configurable: true
     });
+
+    // The following allows multiple tables to be created, one after another. Dexie makes versioning look synchronous but it really isn't, meaning it breaks when we have to call db.close() earlier.
     return new Promise(resolve=>{
         db.on("ready", ()=>{
             resolve();
