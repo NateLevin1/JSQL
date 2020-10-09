@@ -27,7 +27,8 @@ describe("evaluation works", ()=>{
         expect(visualConsole.error).toBeCalledWith(1);
     });
     test("Evaluation errors to correct place if thrown", ()=>{
-        evaluate("throw 1");
-        expect(visualConsole.error).toBeCalledWith(1);
+        return evaluate("throw 1").finally(()=>{
+            expect(visualConsole.error).toBeCalledWith(1);
+        });
     });
 });

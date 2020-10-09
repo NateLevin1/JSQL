@@ -2,9 +2,19 @@ import * as monaco from 'monaco-editor';
 import "./monaco.css";
 import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
-    value: [
-      ""
-    ].join('\n'),
+    value: `// JSQL has been auto-imported and top level await is enabled
+const db = new Table(\`CREATE TABLE db (
+  id AUTO_INCREMENT,
+  firstName,
+  lastName,
+  email
+)\`);
+await db.create();
+await db.query(\`INSERT INTO \${db.name} VALUES
+('John', 'Doe', 'johndoe@example.com'),
+('Jill', 'Doe', 'jilldoe@example.com')\`);
+const result = await db.query(\`SELECT * FROM \${db.name}\`);
+console.log(result);`,
     language: 'javascript',
     theme: "vs-dark",
     automaticLayout: true,

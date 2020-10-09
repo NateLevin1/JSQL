@@ -29,3 +29,40 @@
 .warn::before {
     content:"☢ "
 }
+
+.object-view {
+    font-family: sans-serif;
+    outline:0;
+    border: 1px solid black;
+    display: inline-block;
+    padding: 0.2rem;
+    padding-right: 0.6rem;
+    background-color: white;
+}
+
+.object-view[open] summary {
+    cursor: pointer;
+    border-bottom: 1px solid black;
+    padding: 0.2rem;
+}
+
+.object-view summary {
+    padding: 0.2rem;
+    outline: 0;
+    user-select: none;
+    -webkit-user-select: none;
+    width:100%;
+}
+
+.string {
+    color: red;
+}
+
+.number {
+    color: blue;
+}
+
+.object-view p {
+    margin-left: 2ch;
+    cursor: default;
+}

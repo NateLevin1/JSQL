@@ -1,9 +1,9 @@
 const path = require('path');
-const EsmWebpackPlugin = require("@purtuga/esm-webpack-plugin");
+const EsmWebpackPlugin = require("@purtuga/esm-webpack-plugin"); // see https://paultavares.wordpress.com/2018/07/02/webpack-how-to-generate-an-es-module-bundle/ 
 
 module.exports = {
   mode: 'production',
-  entry: './src/lib/table/table.ts',
+  entry: './src/lib/loader.ts',
   module: {
     rules: [
       {
