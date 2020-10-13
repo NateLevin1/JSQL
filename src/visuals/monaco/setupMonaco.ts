@@ -3,19 +3,19 @@ import "./monaco.css";
 import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
-const db = new Table(\`CREATE TABLE db (
+const tbl = new Table(\`CREATE TABLE tbl (
   id AUTO_INCREMENT,
   firstName,
   lastName,
   email
 )\`);
-await db.create();
-if(await db.isEmpty()) {
-  await db.query(\`INSERT INTO \${db.name} VALUES
+await tbl.create();
+if(await tbl.isEmpty()) {
+  await tbl.query(\`INSERT INTO \${tbl.name} VALUES
   ('John', 'Doe', 'johndoe@example.com'),
   ('Jill', 'Doe', 'jilldoe@example.com')\`);
 }
-const result = await db.query(\`SELECT * FROM \${db.name}\`);
+const result = await tbl.query(\`SELECT * FROM \${tbl.name}\`);
 console.log(result);`,
     language: 'javascript',
     theme: "vs-dark",

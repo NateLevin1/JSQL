@@ -82,12 +82,22 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
 
     // The following allows multiple tables to be created, one after another. Dexie makes versioning look synchronous but it really isn't, meaning it breaks when we have to call db.close() earlier.
     return new Promise((resolve, reject)=>{
+        let hasReadied = false;
         db.on("ready", ()=>{
-            storesColumns[tableName] = newStoresColumns;
-            resolve();
+            if(!hasReadied) {
+                hasReadied = true;
+                // because upgrade doesn't run on first
+                storesColumns[tableName] = newStoresColumns;
+                resolve();
+            }
         });
         db.version(db.verno + 1).stores({
             [tableName]: stringStructure
+        }).upgrade(()=>{
+            // runs after the db has been made. normally you would
+            // use this to change stuff in the db, but we don't need to here
+            storesColumns[tableName] = newStoresColumns;
+            resolve();
         });
         setTimeout(()=>{
             reject("Opening the database took longer than expected.");

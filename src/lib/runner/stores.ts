@@ -9,6 +9,8 @@ const stores: {[key: string]: Table} = {};
 export const storesColumns: {[key: string]:string[]} = {};
 export default stores;
 
+//@ts-ignore
+window.db = db;
 
 // CODE
 Dexie.exists("JSQL").then((exists)=>{
