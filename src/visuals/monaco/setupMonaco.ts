@@ -13,7 +13,7 @@ await tbl.create();
 if(await tbl.isEmpty()) {
   await tbl.query(\`INSERT INTO \${tbl.name} VALUES
   ('John', 'Doe', 'johndoe@example.com'),
-  ('Jill', 'Doe', 'jilldoe@example.com')\`);
+  ('Jane', 'Doe', 'janedoe@example.com')\`);
 }
 const result = await tbl.query(\`SELECT * FROM \${tbl.name}\`);
 console.log(result);`,

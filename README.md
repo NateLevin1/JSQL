@@ -3,21 +3,26 @@ JSQL is a subset of [SQL](https://en.wikipedia.org/wiki/SQL) which allows develo
 
 ### Code Examples
 ```js
-const db = new Table(`CREATE TABLE db (
-	id AUTO_INCREMENT,
-	firstName,
-	lastName,
-	email
+const tbl = new Table(`CREATE TABLE tbl (
+  id AUTO_INCREMENT,
+  firstName,
+  lastName,
+  email
 )`);
-await db.query(`INSERT INTO ${db.name} VALUES
-('John', 'Doe', 'johndoe@example.com'),
-('Jill', 'Doe', 'jilldoe@example.com')`);
-const result = await db.query(`SELECT * FROM ${db.name}`);
+await tbl.create();
+if(await tbl.isEmpty()) {
+  await tbl.query(`INSERT INTO ${tbl.name} VALUES
+  ('John', 'Doe', 'johndoe@example.com'),
+  ('Jane', 'Doe', 'janedoe@example.com'),
+  ('Joe', 'Schmoe', 'joeschmoe@example.com'),
+  ('Jill', 'Schmoe', 'jillschmoe@example.com')`);
+}
+const result = await tbl.query(`SELECT * FROM ${tbl.name} WHERE lastName = 'Doe'`);
 console.log(result);
 /* 
 [
-  { id:0, firstName: "John", lastName:"Doe", email:"johndoe@example.com"},
-  { id:1, firstName: "Jill", lastName:"Doe", email:"jilldoe@example.com"}
+  { id:1, firstName: "John", lastName:"Doe", email:"johndoe@example.com"},
+  { id:2, firstName: "Jane", lastName:"Doe", email:"janedoe@example.com"}
 ] 
 */
 ```
