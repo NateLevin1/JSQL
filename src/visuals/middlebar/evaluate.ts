@@ -28,9 +28,10 @@ const evaluate = (content: string)=>{ // async so eval is async
     try {
         // webpack & eval works very weird so this is how we do it
         var Table = ImportedTable;
-        return eval(`(async () => {${content}\nreset();})()`).catch((e:any)=>{visualConsole.error(e); reset();});
+        return eval(`(async () => {${content}\n})()`).catch((e:any)=>{visualConsole.error(e);}).finally(()=>{reset();});
     } catch(e) {
         visualConsole.error(e);
+        reset();
     }
 }
 
