@@ -1,5 +1,6 @@
 import "fake-indexeddb/auto";
 import parseAndRun from "../../../src/lib/parser/parseAndRun";
+jest.deepUnmock('dexie');
 
 // Since this is async, the below can sometimes fail
 // describe("select", ()=>{

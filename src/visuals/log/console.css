@@ -1,5 +1,6 @@
 #output {
     font-family: sans-serif;
+    font-size:1em;
     padding:0.5em;
     background-color: rgba(0,0,0,0.1);
     box-sizing: border-box;
@@ -10,6 +11,9 @@
 }
 .log {
     color: black;
+}
+.log::before {
+    content: "⠿ ";
 }
 .runlog {
     color: rgb(2, 85, 2);
@@ -62,7 +66,24 @@
     color: blue;
 }
 
+.function {
+    background-color: rgb(228, 228, 228);
+    font-family: monospace;
+    display:inline-block;
+    width:50ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .object-view p {
     margin-left: 2ch;
     cursor: default;
+}
+
+#output p span::after {
+    content: " - ";
+}
+#output p span:last-of-type::after {
+    content: unset;
 }

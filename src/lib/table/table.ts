@@ -1,5 +1,6 @@
 import parseAndRun from "../parser/parseAndRun";
 import parseIdentifier from "../parser/parseIdentifier/parseIdentifier";
+import stores from "../runner/stores";
 /**
  * @example
  * let tbl = new Table("CREATE TABLE tbl (id AUTO_INCREMENT)");
@@ -32,5 +33,10 @@ export default class Table {
     }
     query(query: string) {
         return parseAndRun(query);
+    }
+    isEmpty(): Promise<boolean> {
+        return new Promise(async (resolve)=>{
+            resolve((await stores[this.name].count()) === 0);
+        });
     }
 }

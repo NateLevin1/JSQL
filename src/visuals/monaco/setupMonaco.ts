@@ -10,9 +10,11 @@ const db = new Table(\`CREATE TABLE db (
   email
 )\`);
 await db.create();
-await db.query(\`INSERT INTO \${db.name} VALUES
-('John', 'Doe', 'johndoe@example.com'),
-('Jill', 'Doe', 'jilldoe@example.com')\`);
+if(await db.isEmpty()) {
+  await db.query(\`INSERT INTO \${db.name} VALUES
+  ('John', 'Doe', 'johndoe@example.com'),
+  ('Jill', 'Doe', 'jilldoe@example.com')\`);
+}
 const result = await db.query(\`SELECT * FROM \${db.name}\`);
 console.log(result);`,
     language: 'javascript',

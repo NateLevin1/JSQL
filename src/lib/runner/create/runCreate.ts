@@ -5,10 +5,11 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     if(whatCreate.toUpperCase() !== "TABLE") {
         throw new Error("CREATE clause can only make tables. Instead got "+whatCreate);
     }
-    storesColumns[tableName] = [];
-    increaseVersion();
+    
     // see https://dexie.org/docs/Version/Version.stores() for the format of the string
     let stringStructure = "";
+
+    let newStoresColumns: string[] = [];
 
     let fixedTableStructure = tableStructure;
     if(fixedTableStructure[0] === "(") {
@@ -33,7 +34,6 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
         flags = flags.map((val)=>{
             switch(val) {
                 case "AUTO_INCREMENT":
-                    canPushToStoreColumns = false;
                     return "++";
                 case "UNIQUE":
                     return "&";
@@ -41,12 +41,13 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
                     if(n === 0) { // first column is primary key; must be indexable
                         throw new Error("Saw NO_INDEX flag on first column: The first column is the primary key; It must be indexable.")
                     }
+                    canPushToStoreColumns = false;
                     return "NO_INDEX";
             }
         });
 
         if(canPushToStoreColumns) {
-            storesColumns[tableName].push(columnName);
+            newStoresColumns.push(columnName);
         }
 
         if(flags.includes("NO_INDEX")) {
@@ -59,6 +60,17 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     
 
     stringStructure = stringStructure.slice(0, stringStructure.length-1); // slice to remove ending comma
+
+    let newPrimaryKey = newStoresColumns[0];
+    newStoresColumns = newStoresColumns.slice(1);
+
+    // TODO: .sort() will almost certainly cause issues in the future. The problem is that Dexie changes the indexes from when they were first made
+    if(stores[tableName] && areArraysEqual(stores[tableName].schema.indexes.map(obj=>obj.name).sort(), newStoresColumns.sort()) && stores[tableName].schema.primKey.name === newPrimaryKey) {
+        // new is same as old, don't need to re-add
+        return Promise.resolve();
+    }
+    increaseVersion();
+
     if(db.isOpen()) {
         db.close();
     }
@@ -69,13 +81,28 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     });
 
     // The following allows multiple tables to be created, one after another. Dexie makes versioning look synchronous but it really isn't, meaning it breaks when we have to call db.close() earlier.
-    return new Promise(resolve=>{
+    return new Promise((resolve, reject)=>{
         db.on("ready", ()=>{
+            storesColumns[tableName] = newStoresColumns;
             resolve();
         });
-        db.version(version).stores({
+        db.version(db.verno + 1).stores({
             [tableName]: stringStructure
         });
-        db.open();
+        setTimeout(()=>{
+            reject("Opening the database took longer than expected.");
+        }, 4000);
+        db.open()
+        .catch((reason)=>{
+            reject("There was a problem opening the database. "+reason);
+        });
     });
+}
+
+const areArraysEqual = (a: Array<any>, b: Array<any>)=>{
+  if (a.length !== b.length) return false;
+  for (var i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
