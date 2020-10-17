@@ -1,11 +1,7 @@
 import runCreate from "./runCreate";
-import stores, { db, increaseVersion, storesColumns } from "../stores";
+import stores, { db, storesColumns } from "../stores";
 
 jest.mock("../stores");
-
-
-// @ts-ignore
-increaseVersion.mockImplementation(()=>null);
 
 var runReady: Function;
 // @ts-ignore
@@ -26,8 +22,10 @@ const setTableUndefined = ()=>{
 db.version.mockImplementation(()=>{
     return {
         stores: (newStores)=>{
-            
             expectFn(newStores);
+            return {
+                upgrade:()=>{}
+            }
         }
     }
 });

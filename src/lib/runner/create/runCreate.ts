@@ -1,4 +1,4 @@
-import stores, { db, increaseVersion, version, storesColumns } from "../stores";
+import stores, { db, storesColumns } from "../stores";
 
 export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     const [whatCreate, tableName, tableStructure] = clauses[0].items as [string, string, string];
@@ -69,7 +69,6 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
         // new is same as old, don't need to re-add
         return Promise.resolve();
     }
-    increaseVersion();
 
     if(db.isOpen()) {
         db.close();

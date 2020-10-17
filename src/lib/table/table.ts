@@ -1,5 +1,6 @@
 import parseAndRun from "../parser/parseAndRun";
 import parseIdentifier from "../parser/parseIdentifier/parseIdentifier";
+import deleteTable from "../runner/drop/deleteTable";
 import stores from "../runner/stores";
 /**
  * @example
@@ -38,5 +39,11 @@ export default class Table {
         return new Promise(async (resolve)=>{
             resolve((await stores[this.name].count()) === 0);
         });
+    }
+    clear() {
+        return stores[this.name].clear();
+    }
+    drop() {
+        return deleteTable(this.name);
     }
 }
