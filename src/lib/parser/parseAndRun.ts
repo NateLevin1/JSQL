@@ -3,6 +3,7 @@ import runCreate from "../runner/create/runCreate";
 import parseStatement from "./parseStatement/parseStatement";
 import "./registerClauses";
 import runInsert from "../runner/insert/runInsert";
+import runDrop from "../runner/drop/runDrop";
 
 export default function parseAndRun(statement: string) {
     const clauses = parseStatement(statement);
@@ -14,6 +15,8 @@ export default function parseAndRun(statement: string) {
         case "CREATE":
             return runCreate(clauses);
         case "INSERT":
-            return runInsert(clauses)
+            return runInsert(clauses);
+        case "DROP":
+            return runDrop(clauses);
     }
 }

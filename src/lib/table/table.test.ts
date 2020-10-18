@@ -1,8 +1,19 @@
 import Table from "./table";
 import parseAndRun from "../parser/parseAndRun";
+import stores from "../runner/stores";
+import deleteTable from "../runner/drop/deleteTable";
+jest.mock("../runner/stores");
 jest.mock("../parser/parseAndRun");
+jest.mock("../runner/drop/deleteTable");
 
-
+stores.tbl = {
+    count: jest.fn(()=>{
+        return Promise.resolve(0);
+    }),
+    clear: jest.fn(()=>{
+        return Promise.resolve();
+    })
+} as any;
 
 const createStatement = "CREATE TABLE tbl (id AUTO_INCREMENT)";
 test("create statement is correct", ()=>{
@@ -42,4 +53,23 @@ test("rejects on parseAndRun rejection", ()=>{
     // @ts-ignore
     parseAndRun.mockRejectedValueOnce("r"); // this value doesn't matter, as long as its a promise
     expect(tbl.create()).rejects.toBe("r");
+});
+
+test("isEmpty returns proper value", ()=>{
+    let tbl = new Table(createStatement);
+    return tbl.isEmpty().then((resVal)=>{
+        expect(resVal).toBe(true);
+    });
+});
+
+test("clear calls correct function", ()=>{
+    let tbl = new Table(createStatement);
+    tbl.clear(); 
+    expect(stores.tbl.clear).toBeCalledTimes(1);
+});
+
+test("drop calls deleteTable with correct arguments", ()=>{
+    let tbl = new Table(createStatement);
+    tbl.drop();
+    expect(deleteTable).toBeCalledWith("tbl");
 });

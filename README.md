@@ -148,16 +148,16 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 
 ## SELECT
 **Syntax**
-Get data from a table. The `FROM` keyword is required and is used to indicate which table the query should be executed on. The optional `WHERE` keyword is used to describe 
+Get data from a table. The `FROM` keyword is required and is used to indicate which table the query should be executed on. The optional `WHERE` keyword is used to filter out results. **Note that if multiple columns are selected, there cannot be a space between the columns names (e.g. `SELECT x,y` NOT `SELECT x, y`.)**
 ```sql
-SELECT (identifier: columnName|*) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*|identifier[,identifier][,...]) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
 ```
 **Return Value**
 An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
 
 **Example**
 ```js
-const result = await db.query(`SELECT name, lastName FROM ${db.name}`);
+const result = await db.query(`SELECT name,lastName FROM ${db.name}`);
 console.log(result == 
 [
 	{
@@ -217,4 +217,18 @@ INSERT INTO (identifier: tableName) VALUES
 db.query(`INSERT INTO ${db.name} VALUES
 ('John', 'Doe', 'johndoe@example.com'),
 ('Jill', 'Doe', 'jilldoe@example.com')`);
+```
+
+## DROP
+**Syntax**
+Delete the table `tableName`.
+```sql
+DROP TABLE (identifier: tableName)
+```
+**Return Value**
+`null`.
+
+**Example**
+```js
+db.query(`DROP TABLE ${db.name}`);
 ```
