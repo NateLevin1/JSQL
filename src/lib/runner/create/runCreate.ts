@@ -2,10 +2,8 @@ import stores, { db, storesColumns } from "../stores";
 
 export default function runCreate(clauses: {keyword: string, items:any[]}[]) {
     const [whatCreate, tableName, tableStructure] = clauses[0].items as [string, string, string];
-    if(whatCreate.toUpperCase() !== "TABLE") {
-        throw new Error("CREATE clause can only make tables. Instead got "+whatCreate);
-    }
-    
+    // when adding database creation, whatcreate is what specifies between TABLE and DATABASE
+
     // see https://dexie.org/docs/Version/Version.stores() for the format of the string
     let stringStructure = "";
 

@@ -2,15 +2,12 @@ import stores, { storesColumns } from "../stores";
 
 export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
     const [insertClause, valuesClause] = clauses;
-    const [shouldBeInto, tableName] = insertClause.items;
+    const tableName = insertClause.items[1];
     let   [valuesExpr] = valuesClause.items as [string];
     const {keyword: shouldBeValues} = valuesClause;
 
     // TODO: Add optional expression after tableName to specify which columns to add data to
 
-    if(shouldBeInto.toUpperCase() !== "INTO") {
-        throw new Error("INSERT clause can only insert INTO. Instead got "+shouldBeInto);
-    }
     if(shouldBeValues != "VALUES") {
         throw new Error("INSERT clause must be followed by VALUE clause. Instead got "+shouldBeValues);
     }

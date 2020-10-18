@@ -40,10 +40,6 @@ test("works with adding multiple rows, multiple column items", ()=>{
     runInsert([{keyword:"INSERT", items:["INTO", "db"]}, {keyword:"VALUES", items:["(1,2), (1,2)"]}]);
 });
 
-test("throws on non-into", ()=>{
-    expect(()=>runInsert([{keyword:"INSERT", items:["NOTINTO", "db"]}, {keyword:"VALUES", items:["(1,2), (1,2)"]}])).toThrow();
-});
-
 test("throws on non-values", ()=>{
     expect(()=>runInsert([{keyword:"INSERT", items:["INTO", "db"]}, {keyword:"NOTVALUES", items:["(1,2), (1,2)"]}])).toThrow();
 });

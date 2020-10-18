@@ -86,9 +86,6 @@ test("NO_INDEX works", ()=>{
 
     expect(db.version).toBeCalled();
 });
-test("items[0] must be table", ()=>{
-    expect(()=>runCreate([{keyword: "CREATE", items:["NOTTABLE", "table", "(id AUTO_INCREMENT, name NO_INDEX)"]}])).toThrow();
-});
 
 test("Works correctly with spaces", ()=>{
     expectFn = (newStores)=>{

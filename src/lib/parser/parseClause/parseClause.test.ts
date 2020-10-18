@@ -55,16 +55,48 @@ test("rests works properly", ()=>{
 
 test("Invalid keyword throws", ()=>{
     clauses.clauses = {};
-    // select is never registered
+    //* select is never registered
     // @ts-ignore
-    parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
+    parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" *"});
     expect(()=>parseClause("SELECT *")).toThrow();
 });
 
-test("Unknown val type throws", ()=>{
+test("Forced after works if correct", ()=>{
     clauses.clauses = {};
-    clauses.register("SELECT", ["unknown-val-type"]);
+    clauses.register("TEST", ["AFTER"]);
     // @ts-ignore
-    parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
-    expect(()=>parseClause("SELECT *")).toThrow();
+    parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" AFTER"});
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "AFTER", rest:""});
+    expect(parseClause("TEST AFTER")).toStrictEqual({keyword: "TEST", items:["AFTER"], rest:""});
+});
+
+test("Forced after throws if incorrect", ()=>{
+    clauses.clauses = {};
+    clauses.register("TEST", ["AFTER"]);
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" NOTAFTER"});
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "NOTAFTER", rest:""});
+    expect(()=>parseClause("TEST NOTAFTER")).toThrow();
+});
+
+test("Forced after \"or\" works if correct", ()=>{
+    clauses.clauses = {};
+    clauses.register("TEST", [["AFTER", "ALSO"]]);
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" ALSO"});
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "ALSO", rest:""});
+    expect(parseClause("TEST ALSO")).toStrictEqual({keyword: "TEST", items:["ALSO"], rest:""});
+});
+
+test("Forced after \"or\" throws if incorrect", ()=>{
+    clauses.clauses = {};
+    clauses.register("TEST", [["AFTER", "ALSO"]]);
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "TEST", rest:" NOTAFTER"});
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "NOTAFTER", rest:""});
+    expect(()=>parseClause("TEST NOTAFTER")).toThrow();
 });

@@ -4,14 +4,21 @@ import parsePredicate from "../parsePredicate/parsePredicate";
 
 export const clauses: IClauses = { 
     clauses: {},
-    register: (keyword: string, requiredItems: string[])=>{
+    register: (keyword: (string|"KEYWORD"), requiredItems: (string|string[])[])=>{
         // clauses.register("SELECT", ["identifier"]);
-        clauses.clauses[keyword.toUpperCase()] = { requiredItems:requiredItems.map((str)=>str.toLocaleLowerCase()) };
+        clauses.clauses[keyword.toUpperCase()] = {
+            requiredItems: requiredItems.map((str)=>{
+                if(str instanceof Array) {
+                    return str.map(val=>val.toLocaleLowerCase());
+                }
+                return str.toLocaleLowerCase();
+            })
+        };
     }
 }
 interface IClauses {
-    clauses: { [key: string]: { requiredItems: string[] }};
-    register: (keyword: string, requiredItems: string[])=>void;
+    clauses: { [key: string]: { requiredItems: (string|string[])[] }};
+    register: (keyword: string, requiredItems: (string|string[])[])=>void;
 }
 
 export function parseClause(str: string) {
@@ -49,7 +56,14 @@ export function parseClause(str: string) {
                 restOfStr = "";
                 break;
             default:
-                throw "Unknown value type "+val;
+                const parsedKeyword = parseIdentifier(restOfStr);
+                const valArr = val instanceof Array ? [...val] : [val];
+                if(!valArr.map(val=>val.toLocaleLowerCase()).includes(parsedKeyword.identifier.toLocaleLowerCase())) {
+                    throw "Expected keyword(s) "+valArr.join(" or ")+" but got "+parsedKeyword.identifier+" in "+keyword+" clause.";
+                }
+                clauseAST.items.push(parsedKeyword.identifier);
+                restOfStr = parsedKeyword.rest;
+                break;
         }
     }
     clauseAST.rest = restOfStr;
