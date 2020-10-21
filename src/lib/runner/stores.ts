@@ -3,8 +3,8 @@ import Dexie, { Table } from "dexie";
 
 // EXPORTS
 export const db = new Dexie("JSQL");
-const stores: {[key: string]: Table} = {};
 export const storesColumns: {[key: string]:string[]} = {};
+const stores: {[key: string]: Table} = {};
 export default stores;
 
 // CODE

@@ -1,5 +1,6 @@
 import { parseExpression } from "../parseExpression/parseExpression";
 import parseIdentifier from "../parseIdentifier/parseIdentifier";
+import parseMultiIdentifier from "../parseMultiIdentifier/parseMultiIdentifier";
 import parsePredicate from "../parsePredicate/parsePredicate";
 
 export const clauses: IClauses = { 
@@ -40,6 +41,11 @@ export function parseClause(str: string) {
                 clauseAST.items.push(parsedIdentifier.identifier);
                 restOfStr = parsedIdentifier.rest;
                 break;
+            case "multi_identifier":
+                const parsedMultiIdentifier = parseMultiIdentifier(restOfStr);
+                clauseAST.items.push(parsedMultiIdentifier.identifiers);
+                restOfStr = parsedMultiIdentifier.rest;
+                break;
             case "predicate":
                 const parsedPredicate = parsePredicate(restOfStr);
                 clauseAST.items.push({left: parsedPredicate.left, right: parsedPredicate.right, operator: parsedPredicate.operator });
@@ -72,6 +78,6 @@ export function parseClause(str: string) {
 
 interface IClauseAST {
     keyword: string;
-    items: ({[key: string]: any}|string)[];
+    items: ({[key: string]: any}|string|string[])[];
     rest: string;
 }

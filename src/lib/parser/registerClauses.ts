@@ -1,7 +1,7 @@
 import { clauses } from "./parseClause/parseClause";
 
-clauses.register("SELECT", ["identifier"]);
-clauses.register("FROM", ["identifier"]);
+clauses.register("SELECT", ["multi_identifier"]);
+clauses.register("FROM", ["multi_identifier"]);
 clauses.register("WHERE", ["predicate"]);
 
 clauses.register("CREATE", ["TABLE", "identifier", "expression"]);

@@ -12,8 +12,23 @@ test("queries correct table", ()=>{
             });
         }
     } as unknown as Table;
-    return runSelect([{keyword: "SELECT", items:["*"]}, {keyword: "FROM", items:["db"]}]).then(result=>{
+    return runSelect([{keyword: "SELECT", items:[["*"]]}, {keyword: "FROM", items:[["db"]]}]).then(result=>{
         expect(result).toStrictEqual(dbItems);
+    });
+});
+
+
+test("works correctly with multiple columns", ()=>{
+    let dbItems = [{ n: 1, id:1 }, { n: 2, id:2 }];
+    stores.db = {
+        toArray: ()=>{
+            return new Promise((resolve)=>{
+                resolve(dbItems);
+            });
+        }
+    } as unknown as Table;
+    return runSelect([{keyword: "SELECT", items:[["n", "id"]]}, {keyword: "FROM", items:[["db"]]}]).then(result=>{
+        expect(result).toStrictEqual(dbItems.map(v=>{return {n: v.n, id: v.id}; }));
     });
 });
 
@@ -26,7 +41,7 @@ test("only returns the data if select items is not *", ()=>{
             });
         }
     } as unknown as Table;
-    return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}]).then(result=>{
+    return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}]).then(result=>{
         expect(result).toStrictEqual(dbItems.map(v=>v.n));
     });
 });
@@ -50,8 +65,32 @@ test("queries all tables if no FROM clause", ()=>{
     } as unknown as Table;
 
 
-    return runSelect([ {keyword: "SELECT", items:["*"]} ]).then(result=>{
-        expect(result).toStrictEqual([dbItems, dbItems]);
+    return runSelect([ {keyword: "SELECT", items:[["*"]]} ]).then(result=>{
+        expect(result).toStrictEqual({ db: dbItems, db2:dbItems } );
+    });
+});
+
+test("queries all tables if from clause is *", ()=>{
+    let dbItems = [{ n: 1 }, { n: 2 }];
+    stores.db = {
+        toArray: ()=>{
+            return new Promise((resolve)=>{
+                resolve(dbItems);
+            });
+        }
+    } as unknown as Table;
+
+    stores.db2 = {
+        toArray: ()=>{
+            return new Promise((resolve)=>{
+                resolve(dbItems);
+            });
+        }
+    } as unknown as Table;
+
+
+    return runSelect([ {keyword: "SELECT", items:[["*"]]}, {keyword: "FROM", items:[["*"]]}]).then(result=>{
+        expect(result).toStrictEqual({ db: dbItems, db2:dbItems } );
     });
 });
 
@@ -135,49 +174,49 @@ describe("WHERE clause", ()=>{
     } as unknown as Table;
     test("= works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"=", right:"1"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:"=", right:"1"}]}]).then(result=>{
             expect(result).toStrictEqual([1, 1]);
         });
     });
     test("IGNORECASE= works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["str"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"str", operator:"IGNORECASE=", right:"'NAME'"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["str"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"str", operator:"IGNORECASE=", right:"'NAME'"}]}]).then(result=>{
             expect(result).toStrictEqual(["name", "nAmE"]);
         });
     });
     test("<> works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"<>", right:"1"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:"<>", right:"1"}]}]).then(result=>{
             expect(result).toStrictEqual([2]);
         });
     });
     test("!= works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"!=", right:"1"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:"!=", right:"1"}]}]).then(result=>{
             expect(result).toStrictEqual([2]);
         });
     });
     test("> works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:">", right:"1"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:">", right:"1"}]}]).then(result=>{
             expect(result).toStrictEqual([2]);
         });
     });
     test(">= works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:">=", right:"1"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:">=", right:"1"}]}]).then(result=>{
             expect(result).toStrictEqual([1, 1, 2]);
         });
     });
     test("< works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"<", right:"2"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:"<", right:"2"}]}]).then(result=>{
             expect(result).toStrictEqual([1, 1]);
         });
     });
     test("<= works", ()=>{
         stores.db = newDB;
-        return runSelect([{keyword: "SELECT", items:["n"]}, {keyword: "FROM", items:["db"]}, {keyword: "WHERE", items:[{left:"n", operator:"<=", right:"2"}]}]).then(result=>{
+        return runSelect([{keyword: "SELECT", items:[["n"]]}, {keyword: "FROM", items:[["db"]]}, {keyword: "WHERE", items:[{left:"n", operator:"<=", right:"2"}]}]).then(result=>{
             expect(result).toStrictEqual([1, 1, 2]);
         });
     });

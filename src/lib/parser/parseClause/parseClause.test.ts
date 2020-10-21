@@ -2,10 +2,12 @@ import { parseClause, clauses } from "./parseClause";
 import { parseExpression } from "../parseExpression/parseExpression";
 import parseIdentifier from "../parseIdentifier/parseIdentifier";
 import parsePredicate from "../parsePredicate/parsePredicate";
+import parseMultiIdentifier from "../parseMultiIdentifier/parseMultiIdentifier";
 
 jest.mock("../parseExpression/parseExpression");
 jest.mock("../parseIdentifier/parseIdentifier");
 jest.mock("../parsePredicate/parsePredicate");
+jest.mock("../parseMultiIdentifier/parseMultiIdentifier");
 
 test("Identifiers work properly", ()=>{
     clauses.clauses = {};
@@ -21,6 +23,16 @@ test("Identifiers work properly with register & parsed & requiredItems as wrong 
     // @ts-ignore
     parseIdentifier.mockReturnValueOnce({identifier: "select", rest:" *"}).mockReturnValueOnce({identifier: "*", rest:""});
     expect(parseClause("select *")).toStrictEqual({keyword: "SELECT", items:["*"], rest:""});
+});
+
+test("MultiIdentifiers work properly", ()=>{
+    clauses.clauses = {};
+    clauses.register("SELECT", ["multi_identifier"]);
+    // @ts-ignore
+    parseIdentifier.mockReturnValueOnce({identifier: "SELECT", rest:" one,two"});
+    // @ts-ignore
+    parseMultiIdentifier.mockReturnValueOnce({identifiers:["one", "two"], rest:""})
+    expect(parseClause("SELECT one,two")).toStrictEqual({keyword:"SELECT", items:[["one", "two"]], rest:""});
 });
 
 test("Predicates work properly", ()=>{
@@ -43,7 +55,7 @@ test("Expressions work properly", ()=>{
     expect(parseClause("TEST 1+1")).toStrictEqual({keyword: "TEST", items:["1+1"], rest:""});
 });
 
-test("rests works properly", ()=>{
+test("rest works properly", ()=>{
     clauses.clauses = {};
     clauses.register("TEST", ["rest"]);
     // @ts-ignore
