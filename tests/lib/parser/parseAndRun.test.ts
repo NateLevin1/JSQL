@@ -1,6 +1,15 @@
 import "fake-indexeddb/auto";
-import parseAndRun from "../../../src/lib/parser/parseAndRun";
 jest.deepUnmock('dexie');
+import parseAndRun from "../../../src/lib/parser/parseAndRun";
+import databases, { IDatabase } from   "../../../src/lib/runner/databases";
+import Dexie from "dexie";
+
+databases["__JSQL_DEFAULT__"] = {
+    db: new Dexie("__JSQL_DEFAULT__"),
+    stores: {},
+    storesColumns: {}
+
+} as IDatabase;
 
 // Since this is async, the below can sometimes fail
 // describe("select", ()=>{
@@ -63,10 +72,9 @@ jest.deepUnmock('dexie');
 test("everything works together: CREATE TABLE works + INSERT INTO works + SELECT works + Multiple tables can be made", ()=>{
     
     // parseAndRun(`CREATE TABLE tbl (\n\t\tid AUTO_INCREMENT,\n\t\tnum\n)`);
-    // @ts-ignore
-    return parseAndRun(`CREATE TABLE ins (\n\t\tid AUTO_INCREMENT,\n\t\tnum\n)`).then(()=>{
-        parseAndRun(`CREATE TABLE bruh (\n\t\tid AUTO_INCREMENT,\n\t\tnum\n)`).then(()=>{
-            parseAndRun("INSERT INTO ins VALUES (1),(2),(3),(4)").then(()=>{
+    return parseAndRun(`CREATE TABLE ins (\n\t\tid AUTO_INCREMENT,\n\t\tnum\n)`, databases["__JSQL_DEFAULT__"]).then(()=>{
+        parseAndRun(`CREATE TABLE bruh (\n\t\tid AUTO_INCREMENT,\n\t\tnum\n)`, databases["__JSQL_DEFAULT__"]).then(()=>{
+            parseAndRun("INSERT INTO ins VALUES (1),(2),(3),(4)", databases["__JSQL_DEFAULT__"]).then(()=>{
                 // @ts-ignore
                 parseAndRun("SELECT * from ins").then(result => {
                     expect(result).toStrictEqual([{id: 1, num: 1}, {id: 2, num: 2}, {id: 3, num: 3}, {id: 4, num: 4}]);

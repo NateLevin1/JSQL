@@ -1,7 +1,7 @@
 import { Table } from "dexie";
-import stores from "../stores";
+import { IDatabase } from "../databases";
 
-export default async function runSelect(clauses: {keyword: string, items:any[]}[]) {
+export default async function runSelect(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const columns: string[] = clauses[0].items[0];
     let storeNames: string[] = []; // this is the same as star
     let wherePredicate: (undefined|{left: string, operator: string, right: string});
@@ -14,7 +14,7 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
                 const names = obj.items[0];
                 for(const name of names) {
                     if(name === "*") {
-                        storeNames.push(...Object.keys(stores));
+                        storeNames.push(...Object.keys(database.stores));
                     } else {
                         storeNames.push(name);
                     }
@@ -28,12 +28,12 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
 
     if(storeNames.length === 0) {
         // if it is empty (no from clause) then set it as if it were *
-        storeNames.push(...Object.keys(stores));
+        storeNames.push(...Object.keys(database.stores));
     }
 
     let resultsByStore: {[key:string]:any} = {};
     for(const name of storeNames) {
-        const store = stores[name];
+        const store = database.stores[name];
         let result: ({[key:string]:any}|any)[] = [];
         let storeContents = await getContents(store, wherePredicate);
         for(const item of storeContents) {

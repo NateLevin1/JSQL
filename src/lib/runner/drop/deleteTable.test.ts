@@ -1,40 +1,42 @@
-import { db } from "../stores";
 import deleteTable from "./deleteTable";
 
-jest.mock("../stores");
-db.isOpen = jest.fn(()=>true);
-db.close = ()=>{};
 var upgradeCallback:Function;
-db.version = jest.fn(()=>{
-    return {
-        stores: (newStores)=>{
-            expect(newStores).toStrictEqual({
-                "name":null
-            });
-            return {
-                upgrade:(callback)=>{upgradeCallback = callback;}
-            }
-        }
-    }
-}) as any;
 
 var onCallback: Function;
-db.on = jest.fn((type, callback)=>{
-    onCallback = callback;
-}) as any;
 
-
+const database = {
+    db: {
+        isOpen: jest.fn(()=>true),
+        close: ()=>{},
+        version: jest.fn(()=>{
+            return {
+                stores: (newStores)=>{
+                    expect(newStores).toStrictEqual({
+                        "name":null
+                    });
+                    return {
+                        upgrade:(callback)=>{ upgradeCallback = callback; }
+                    }
+                }
+            }
+        }),
+        on: jest.fn((type, callback)=>{
+            onCallback = callback;
+        }),
+        open: jest.fn(()=>Promise.resolve())
+    }
+}
 
 test("Sets table to null when deleteTable is called", ()=>{
-    db.open = jest.fn(()=>Promise.resolve()) as any;
-    deleteTable("name");
+    database.db.open = jest.fn(()=>Promise.resolve());
+    deleteTable("name", database as any);
     onCallback();
     upgradeCallback();
-    expect(db.isOpen).toBeCalled();
-    expect(db.version).toBeCalled();
+    expect(database.db.isOpen).toBeCalled();
+    expect(database.db.version).toBeCalled();
 });
 
 test("rejects if db open fails", ()=>{
-    db.open = jest.fn(()=>Promise.reject("r")) as any;
-    expect(()=>deleteTable("name")).rejects.toBe("There was a problem opening the database. r");
+    database.db.open = jest.fn(()=>Promise.reject("r"));
+    expect(()=>deleteTable("name", database as any)).rejects.toBe("There was a problem opening the database. r");
 });

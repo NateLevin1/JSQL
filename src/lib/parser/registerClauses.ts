@@ -4,7 +4,7 @@ clauses.register("SELECT", ["multi_identifier"]);
 clauses.register("FROM", ["multi_identifier"]);
 clauses.register("WHERE", ["predicate"]);
 
-clauses.register("CREATE", ["TABLE", "identifier", "expression"]);
+clauses.register("CREATE", [["TABLE", "DATABASE"], "identifier", "expression"]);
 
 clauses.register("INSERT", ["INTO", "identifier"]);
 clauses.register("VALUES", ["rest"]); // TODO: probably shouldn't use rest here

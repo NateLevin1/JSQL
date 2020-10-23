@@ -3,12 +3,14 @@ import "./monaco.css";
 import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
+const db = new Database(\`CREATE DATABASE db\`);
+await db.create();
 const tbl = new Table(\`CREATE TABLE tbl (
   id AUTO_INCREMENT,
   firstName,
   lastName,
   email
-)\`);
+)\`, db);
 await tbl.create();
 if(await tbl.isEmpty()) {
   await tbl.query(\`INSERT INTO \${tbl.name} VALUES

@@ -1,5 +1,5 @@
 import visualConsole from "../log/console";
-import { Table as ImportedTable } from "../../lib/loader";
+import { Table as ImportedTable, Database as ImportedDatabase } from "../../lib/loader";
 const evaluate = (content: string)=>{ // async so eval is async
     // substitute console methods so that it will show up on both the actual console and the visual console
     const oldLog = console.log;
@@ -28,6 +28,7 @@ const evaluate = (content: string)=>{ // async so eval is async
     try {
         // webpack & eval works very weird so this is how we do it
         var Table = ImportedTable;
+        var Database = ImportedDatabase;
         return eval(`(async () => {${content}\n})()`).catch((e:any)=>{visualConsole.error(e);}).finally(()=>{reset();});
     } catch(e) {
         visualConsole.error(e);

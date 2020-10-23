@@ -1,7 +1,8 @@
 import parseAndRun from "../parser/parseAndRun";
 import parseIdentifier from "../parser/parseIdentifier/parseIdentifier";
 import deleteTable from "../runner/drop/deleteTable";
-import stores from "../runner/stores";
+import databases from "../runner/databases";
+import Database from "../database/database";
 /**
  * @example
  * let tbl = new Table("CREATE TABLE tbl (id AUTO_INCREMENT)");
@@ -10,40 +11,47 @@ import stores from "../runner/stores";
  */
 export default class Table {
     createStatement: string
+    parentDbName: string
     name: string
-    constructor(shouldParse: string) {
-        if(parseIdentifier(shouldParse).identifier !== "CREATE") {
-            throw new Error("Must CREATE a table in table constructor");
+    constructor(shouldParse: string, parentDb: (string|Database) = "__JSQL_DEFAULT__") {
+        if(parseIdentifier(shouldParse).identifier.toUpperCase() !== "CREATE" || parseIdentifier(parseIdentifier(shouldParse).rest).identifier.toUpperCase() !== "TABLE") {
+            throw new Error("Must CREATE a TABLE in table constructor");
         }
         this.createStatement = shouldParse;
 
         // first ident is CREATE, second ident is TABLE, third ident is the name
         this.name = parseIdentifier(parseIdentifier(parseIdentifier(shouldParse).rest).rest).identifier;
+
+        if(typeof parentDb === "string") {
+            this.parentDbName = parentDb;
+        } else {
+            this.parentDbName = parentDb.name;
+        }
     }
     create() {
         return new Promise((resolve, reject)=>{
             // this whole antipattern is just so that you can set your table var to this fn so we don't have an awkward await statement that is at the start of the line 
-            parseAndRun(this.createStatement)
+            parseAndRun(this.createStatement, databases[this.parentDbName])
             .then(()=>{
                 resolve(this);
             })
-            .catch((rejection)=>{
+            .catch((rejection: unknown)=>{
                 reject(rejection);
             })
         });
     }
     query(query: string) {
-        return parseAndRun(query);
+        return parseAndRun(query, databases[this.parentDbName]);
     }
     isEmpty(): Promise<boolean> {
         return new Promise(async (resolve)=>{
-            resolve((await stores[this.name].count()) === 0);
+            resolve((await databases[this.parentDbName].stores[this.name].count()) === 0);
         });
     }
     clear() {
-        return stores[this.name].clear();
+        return databases[this.parentDbName].stores[this.name].clear();
     }
     drop() {
-        return deleteTable(this.name);
+        return deleteTable(this.name, databases[this.parentDbName]);
     }
 }

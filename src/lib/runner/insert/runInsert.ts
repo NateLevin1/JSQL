@@ -1,6 +1,6 @@
-import stores, { storesColumns } from "../stores";
+import { IDatabase } from "../databases";
 
-export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
+export default function runInsert(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const [insertClause, valuesClause] = clauses;
     const tableName = insertClause.items[1];
     let   [valuesExpr] = valuesClause.items as [string];
@@ -12,7 +12,7 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
         throw new Error("INSERT clause must be followed by VALUE clause. Instead got "+shouldBeValues);
     }
 
-    const table = stores[tableName];
+    const table = database.stores[tableName];
     if(!table) {
         throw new Error("No database with name "+tableName);
     }
@@ -30,8 +30,8 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[]) {
         });
         processedNewRows[i] = {};
 
-        for(var j = 0; j < storesColumns[tableName].length; j++) {
-            processedNewRows[i][storesColumns[tableName][j]] = valAtColumns[j];
+        for(var j = 0; j < database.storesColumns[tableName].length; j++) {
+            processedNewRows[i][database.storesColumns[tableName][j]] = valAtColumns[j];
         }
     }
 

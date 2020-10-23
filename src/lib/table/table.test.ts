@@ -1,12 +1,18 @@
 import Table from "./table";
 import parseAndRun from "../parser/parseAndRun";
-import stores from "../runner/stores";
 import deleteTable from "../runner/drop/deleteTable";
-jest.mock("../runner/stores");
+import databases, { IDatabase } from "../runner/databases";
 jest.mock("../parser/parseAndRun");
 jest.mock("../runner/drop/deleteTable");
+jest.mock("../runner/databases");
 
-stores.tbl = {
+databases["__JSQL_DEFAULT__"] = {
+    db: {},
+    stores: {},
+    storesColumns: {}
+} as IDatabase;
+
+databases["__JSQL_DEFAULT__"].stores.tbl = {
     count: jest.fn(()=>{
         return Promise.resolve(0);
     }),
@@ -14,6 +20,8 @@ stores.tbl = {
         return Promise.resolve();
     })
 } as any;
+
+const defaultDB = databases["__JSQL_DEFAULT__"];
 
 const createStatement = "CREATE TABLE tbl (id AUTO_INCREMENT)";
 test("create statement is correct", ()=>{
@@ -31,7 +39,7 @@ test("create is run with proper statement", ()=>{
     parseAndRun.mockResolvedValueOnce(undefined); // this value doesn't matter, as long as its a promise
     let tbl = new Table(createStatement);
     return tbl.create().then((val)=>{
-        expect(parseAndRun).toBeCalledWith(createStatement);
+        expect(parseAndRun).toBeCalledWith(createStatement, defaultDB);
         expect(val).toBe(tbl);
     });
 });
@@ -41,11 +49,15 @@ test("query runs with proper statement", ()=>{
     parseAndRun.mockResolvedValueOnce(undefined); // this value doesn't matter, as long as its a promise
     let tbl = new Table(createStatement);
     tbl.query("query");
-    expect(parseAndRun).toBeCalledWith("query");
+    expect(parseAndRun).toBeCalledWith("query", defaultDB);
 });
 
 test("throws on constructor non-create statement", ()=>{
     expect(()=>new Table("SELECT * from othertbl")).toThrow();
+});
+
+test("throws on constructor non-table creation", ()=>{
+    expect(()=>new Table(`CREATE DATABASE db`)).toThrow();
 });
 
 test("rejects on parseAndRun rejection", ()=>{
@@ -65,11 +77,21 @@ test("isEmpty returns proper value", ()=>{
 test("clear calls correct function", ()=>{
     let tbl = new Table(createStatement);
     tbl.clear(); 
-    expect(stores.tbl.clear).toBeCalledTimes(1);
+    expect(defaultDB.stores.tbl.clear).toBeCalledTimes(1);
 });
 
 test("drop calls deleteTable with correct arguments", ()=>{
     let tbl = new Table(createStatement);
     tbl.drop();
-    expect(deleteTable).toBeCalledWith("tbl");
+    expect(deleteTable).toBeCalledWith("tbl", defaultDB);
+});
+
+test("name is correct with string", ()=>{
+    let tbl = new Table(createStatement, "dbName");
+    expect(tbl.parentDbName).toBe("dbName");
+});
+
+test("name is correct with object", ()=>{
+    let tbl = new Table(createStatement, { name: "dbName" } as any);
+    expect(tbl.parentDbName).toBe("dbName");
 });
