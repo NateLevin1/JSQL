@@ -3,7 +3,7 @@ import { IDatabase } from "../databases";
 
 export default async function runSelect(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const columns: string[] = clauses[0].items[0];
-    let storeNames: string[] = []; // this is the same as star
+    let storeNames: string[] = [];
     let wherePredicate: (undefined|{left: string, operator: string, right: string});
 
     for(const obj of clauses) {
@@ -34,6 +34,9 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
     let resultsByStore: {[key:string]:any} = {};
     for(const name of storeNames) {
         const store = database.stores[name];
+        if(store === undefined) {
+            throw `Table ${name} does not exist.`;
+        }
         let result: ({[key:string]:any}|any)[] = [];
         let storeContents = await getContents(store, wherePredicate);
         for(const item of storeContents) {

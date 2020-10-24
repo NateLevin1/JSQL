@@ -51,5 +51,5 @@ test("throws on non-values", ()=>{
 test("throws on not a table", ()=>{
     database.stores.db = null;
     database.storesColumns.db = null;
-    expect(()=>runInsert([{keyword:"INSERT", items:["INTO", "db"]}, {keyword:"VALUES", items:["(1,2), (1,2)"]}], database as any)).toThrow();
+    expect(()=>runInsert([{keyword:"INSERT", items:["INTO", "db"]}, {keyword:"VALUES", items:["(1,2), (1,2)"]}], database as any)).toThrowError("Table db does not exist.");
 });

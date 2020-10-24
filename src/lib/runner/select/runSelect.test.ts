@@ -98,6 +98,10 @@ test("queries all tables if from clause is *", ()=>{
     });
 });
 
+test("throws error if table doesn't exist", ()=>{
+    expect(()=>runSelect([{keyword: "SELECT", items:[["*"]]}, {keyword: "FROM", items:[["non-existant"]]}], {stores:{}} as any)).rejects.toBe("Table non-existant does not exist.");
+});
+
 describe("WHERE clause", ()=>{
     let dbItems = [{ n: 1, str:"name" }, { n: 1 }, { n: 2, str:"nAmE" }];
     let newDB = {

@@ -6,7 +6,7 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[], dat
     let   [valuesExpr] = valuesClause.items as [string];
     const {keyword: shouldBeValues} = valuesClause;
 
-    // TODO: Add optional expression after tableName to specify which columns to add data to
+    // TODO: #5 Add optional expression after tableName to specify which columns to add data to
 
     if(shouldBeValues != "VALUES") {
         throw new Error("INSERT clause must be followed by VALUE clause. Instead got "+shouldBeValues);
@@ -14,7 +14,7 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[], dat
 
     const table = database.stores[tableName];
     if(!table) {
-        throw new Error("No database with name "+tableName);
+        throw `Table ${tableName} does not exist.`;
     }
     
     // valuesExpr is in the form (1,'joe'), (2, 'bill')
