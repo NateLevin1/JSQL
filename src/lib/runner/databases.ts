@@ -12,7 +12,7 @@ const databases: {[key:string]:IDatabase} = {};
 export default databases;
 
 // CODE
-Dexie.getDatabaseNames().then((names)=>{
+export const addNames = (names: string[])=>{
     if(names.length === 0) {
         // there are no databases, use default
         names = ["__JSQL_DEFAULT__"];
@@ -20,4 +20,6 @@ Dexie.getDatabaseNames().then((names)=>{
     for(const name of names) {
         addDatabase(name);
     }
-});
+}
+
+Dexie.getDatabaseNames().then(addNames);
