@@ -96,11 +96,18 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[], dat
             });
             database.db.version(database.db.verno + 1).stores({
                 [name]: stringStructure
-            }).upgrade(() => {
+            }).upgrade((trans) => {
                 // runs after the db has been made. normally you would
                 // use this to change stuff in the db, but we don't need to here
                 database.storesColumns[name] = newStoresColumns;
-                resolve();
+                const tbl = trans.table(name);
+                return tbl.toCollection().modify((obj)=>{
+                    for(var index of tbl.schema.indexes.map(obj=>obj.name)) {
+                        if(obj[index] === undefined) {
+                            obj[index] = null;
+                        }
+                    }
+                }).then(()=>{ resolve(); });
             });
             setTimeout(() => {
                 reject("Opening the database took longer than expected.");

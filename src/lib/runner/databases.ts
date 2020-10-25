@@ -11,6 +11,8 @@ export interface IDatabase {
 const databases: {[key:string]:IDatabase} = {};
 export default databases;
 
+// @ts-ignore
+window.databases = databases;
 // CODE
 export const addNames = (names: string[])=>{
     if(names.length === 0) {
