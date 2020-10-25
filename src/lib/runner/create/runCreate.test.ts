@@ -24,7 +24,20 @@ describe("creating tables", ()=>{
                     stores: (newStores) => {
                         expectFn(newStores);
                         return {
-                            upgrade: (callback) => { if(runUpgradeFn) { callback(); } }
+                            upgrade: (callback) => { if(runUpgradeFn) { callback({
+                                table: jest.fn(()=>{ 
+                                    return {
+                                        toCollection: jest.fn(()=>{
+                                            return {
+                                                modify: jest.fn((callback)=>{callback({2:true}); return Promise.resolve()})
+                                            }
+                                        }),
+                                        schema: {
+                                            indexes: [{name: "1"}, {name: "2"}]
+                                        }
+                                    }
+                                })
+                            }); } }
                         }
                     }
                 }

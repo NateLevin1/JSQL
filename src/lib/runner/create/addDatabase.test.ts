@@ -19,9 +19,6 @@ test("works properly if does exist", ()=>{
     });
 
     return addDatabase("name").then(()=>{
-        expect(databases.name.stores).toStrictEqual({
-            tbl: tablesValue
-        });
         expect(databases.name.storesColumns).toStrictEqual({
             tbl: ["sc1"]
         });

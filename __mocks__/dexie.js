@@ -1,12 +1,17 @@
 export default class Dexie {
-    on() {
-
+    on(type, callback) {
+        if(type === "versionchange") {
+            callback();
+        }
     }
     version() {
 
     }
     open() {
         return Promise.resolve();
+    }
+    close() {
+
     }
     isOpen() {
         return true;
