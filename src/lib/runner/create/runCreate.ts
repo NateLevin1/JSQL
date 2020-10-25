@@ -17,7 +17,7 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[], dat
 
         let fixedTableStructure = tableStructure;
         if (fixedTableStructure[0] === "(") {
-            // if it starts with one, it must end ith one otherwise an error would have been thrown
+            // if it starts with one, it must end with one otherwise an error would have been thrown
             fixedTableStructure = fixedTableStructure.slice(1, fixedTableStructure.length - 1);
         }
 

@@ -58,6 +58,17 @@ describe("creating tables", ()=>{
         runCreate([{ keyword: "CREATE", items: ["TABLE", "table", "(one)"] }], database as any);
         expect(database.db.version).toBeCalled();
     });
+
+    test("Works correctly with one - no parens", () => {
+        expectFn = (newStores) => {
+            expect(newStores).toStrictEqual({
+                "table": "one"
+            });
+        }
+        runCreate([{ keyword: "CREATE", items: ["TABLE", "table", "one"] }], database as any);
+        expect(database.db.version).toBeCalled();
+    });
+
     test("Works correctly with multiple", () => {
         expectFn = (newStores) => {
             expect(newStores).toStrictEqual({
@@ -131,6 +142,7 @@ describe("creating tables", ()=>{
         }
         runCreate([{ keyword: "CREATE", items: ["TABLE", "table", "(id AUTO_INCREMENT, storeMe)"] }], database as any);
         expect(database.db.version).toBeCalled();
+        runReady();
         runReady();
         expect(database.storesColumns["table"]).toStrictEqual(["storeMe"]);
     });
@@ -236,6 +248,18 @@ describe("creating tables", ()=>{
         expect(setTimeout).toBeCalled();
         runUpgradeFn = true;
     });
+
+    test("Works correctly if db is already closed", () => {
+        expectFn = (newStores) => {
+            expect(newStores).toStrictEqual({
+                "table": "one"
+            });
+        }
+        database.db.isOpen = jest.fn(()=>false);
+        runCreate([{ keyword: "CREATE", items: ["TABLE", "table", "(one)"] }], database as any);
+        expect(database.db.version).toBeCalled();
+    });
+
 });
 
 describe("creating databases", ()=>{
