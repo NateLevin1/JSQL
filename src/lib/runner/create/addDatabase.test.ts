@@ -12,7 +12,7 @@ test("works properly if doesn't exist", ()=>{
 });
 test("works properly if does exist", ()=>{
     Dexie.exists = jest.fn(()=>Promise.resolve(true));
-    const tablesValue = {name: "tbl", schema: { indexes: [] }};
+    const tablesValue = {name: "tbl", schema: { indexes: [{name: "sc1"}] }};
     Object.defineProperty(Dexie.prototype, "tables", {
         value: [tablesValue],
         configurable: true
@@ -23,7 +23,7 @@ test("works properly if does exist", ()=>{
             tbl: tablesValue
         });
         expect(databases.name.storesColumns).toStrictEqual({
-            tbl: []
+            tbl: ["sc1"]
         });
     });
 });
