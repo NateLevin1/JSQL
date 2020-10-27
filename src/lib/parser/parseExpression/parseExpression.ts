@@ -1,5 +1,5 @@
 export const parseExpression = (str: string)=>{
-    // str looks like (1 + 1) or 1 + 1 or 1+1 or "Hello World"
+    // str looks like (1 + 1) 
     // this function does not run the expression - that is done 
     // at run time. This simply gets everything inside the expression
     // so that it can be executed later
@@ -25,27 +25,9 @@ export const parseExpression = (str: string)=>{
             }
         }
     } else {
-        // otherwise we have to make much more expensive guesses
-        str = str.replace(/(["'`]).+\1/g, escapeCommas);
-        str = str.replace(/\[.+\]/g, escapeCommas);
-        str = str.replace(/{.+}/g, escapeCommas);
-
-        expression = str;
-
-        // now we go through the string, trying to find an unescaped comma.
-        // if none is found, it will just go to the end of the string. 
-        // This works fine for now, but may have to be refactored in the future.
-        for(var i = 0; i < str.length; i++) {
-            const val = str[i];
-            if(val === "," && str[i-1] !== "\\") {
-                expression = str.slice(0, i);
-                rest = str.slice(i+1);
-                break;
-            }
-        }
+        // just skip
+        expression = "";
+        rest = str;
     }
     return {expression: expression, rest:rest }
-}
-export const escapeCommas = (match: string)=>{
-    return match.replace(/,/g, "\\,");;
 }

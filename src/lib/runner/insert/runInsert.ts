@@ -1,8 +1,9 @@
+import parseIdentifier from "../../parser/parseIdentifier/parseIdentifier";
 import { IDatabase } from "../databases";
 
 export default function runInsert(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const [insertClause, valuesClause] = clauses;
-    const tableName = insertClause.items[1];
+    const [into, tableName, columns] = insertClause.items as ["INTO", string, string];
     let   [valuesExpr] = valuesClause.items as [string];
     const {keyword: shouldBeValues} = valuesClause;
 
@@ -16,7 +17,17 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[], dat
     if(!table) {
         throw `Table ${tableName} does not exist.`;
     }
-    
+
+    let columnsArr = database.storesColumns[tableName];
+
+    if (columns) {
+        let noParensColumns = columns;
+        // remove parens
+        noParensColumns = columns.slice(1, noParensColumns.length - 1);
+
+        columnsArr = noParensColumns.split(',').map(val => { let x = parseIdentifier(val); return x.identifier + x.rest; });
+    }
+
     // valuesExpr is in the form (1,'joe'), (2, 'bill')
     let newRows = valuesExpr.split(/, ?(?= {0,}\()/g);
     let processedNewRows: {[key: string]: any}[] = [];
@@ -30,10 +41,12 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[], dat
         });
         processedNewRows[i] = {};
 
-        for(var j = 0; j < database.storesColumns[tableName].length; j++) {
-            processedNewRows[i][database.storesColumns[tableName][j]] = valAtColumns[j];
+        for(var j = 0; j < columnsArr.length; j++) {
+            processedNewRows[i][columnsArr[j]] = valAtColumns[j];
         }
     }
+
+    // TODO: put null for all indexable values
 
     return table.bulkAdd(processedNewRows);
 }
