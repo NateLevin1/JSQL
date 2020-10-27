@@ -10,7 +10,7 @@
     "get-coverage": "./node_modules/.bin/jest lib --coverage",
     "start": "./node_modules/.bin/webpack-dev-server --open",
     "build": "./node_modules/.bin/webpack --config lib-webpack.config.js",
-    "visual-build": "./node_modules/.bin/webpack"
+    "editor-build": "./node_modules/.bin/webpack"
   },
   "repository": {
     "type": "git",
