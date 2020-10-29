@@ -33,6 +33,10 @@ export default function runCreate(clauses: {keyword: string, items:any[]}[], dat
 
             let [columnName, ...flags] = column.split(" ");
 
+            if(!/^[a-zA-Z_$]/i.test(columnName)) { // the regex matches anything that starts with a letter, dollar sign or underscore
+                throw "Names of columns must start with a letter, $ or _. Got "+columnName[0]+" at column "+columnName;
+            }
+
             let canPushToStoreColumns = true;
 
             flags = flags.map((val) => {

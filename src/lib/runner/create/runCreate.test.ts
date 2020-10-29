@@ -273,6 +273,9 @@ describe("creating tables", ()=>{
         expect(database.db.version).toBeCalled();
     });
 
+    test("throws if name of column starts with a number", ()=>{
+        expect(()=>runCreate([{keyword: "CREATE", items:["TABLE", "tbl", "(1invalid)"]}], database as any)).toThrowError("Names of columns must start with a letter, $ or _. Got 1 at column 1invalid");
+    });
 });
 
 describe("creating databases", ()=>{
