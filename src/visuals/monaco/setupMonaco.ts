@@ -3,21 +3,21 @@ import "./monaco.css";
 import zoom from "./zoom";
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
-const db = new Database(\`CREATE DATABASE db\`);
-await db.create();
 const tbl = new Table(\`CREATE TABLE tbl (
   id AUTO_INCREMENT,
   firstName,
   lastName,
   email
-)\`, db);
+)\`);
 await tbl.create();
 if(await tbl.isEmpty()) {
   await tbl.query(\`INSERT INTO \${tbl.name} VALUES
   ('John', 'Doe', 'johndoe@example.com'),
-  ('Jane', 'Doe', 'janedoe@example.com')\`);
+  ('Jane', 'Doe', 'janedoe@example.com'),
+  ('Joe', 'Schmoe', 'joeschmoe@example.com'),
+  ('Jill', 'Schmoe', 'jillschmoe@example.com')\`);
 }
-const result = await tbl.query(\`SELECT * FROM \${tbl.name}\`);
+const result = await tbl.query(\`SELECT * FROM \${tbl.name} WHERE lastName = 'Doe'\`);
 console.log(result);`,
     language: 'javascript',
     theme: "vs-dark",
