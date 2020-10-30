@@ -1,5 +1,7 @@
 echo 'export default `' > typings.ts
 cat ../../../lib/table/table.ts > tmp.txt
+echo "\n" >> tmp.txt
+cat ../../../lib/database/database.ts >> tmp.txt
 sed -i '' 's/`/\\`/g' tmp.txt
 sed -i '' 's/\${/\\\${/g' tmp.txt
 sed -i '' 's/export default //g' tmp.txt

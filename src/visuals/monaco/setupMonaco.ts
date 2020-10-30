@@ -5,12 +5,13 @@ import libSource from "./typings/typings";
 
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
+const db = await (new Database(\`CREATE DATABASE db\`).create());
 const tbl = new Table(\`CREATE TABLE tbl (
   id AUTO_INCREMENT,
   firstName,
   lastName,
   email
-)\`);
+)\`, db);
 await tbl.create();
 if(await tbl.isEmpty()) {
   await tbl.query(\`INSERT INTO \${tbl.name} VALUES
