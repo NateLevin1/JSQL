@@ -1,6 +1,8 @@
 import * as monaco from 'monaco-editor';
 import "./monaco.css";
 import zoom from "./zoom";
+import libSource from "./typings/typings";
+
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
 const tbl = new Table(\`CREATE TABLE tbl (
@@ -37,3 +39,12 @@ document.onkeydown = (event)=>{
   }
 }
 export default editor;
+
+// editor config: see https://microsoft.github.io/monaco-editor/playground.html#extending-language-services-configure-javascript-defaults
+monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+	allowNonTsExtensions: true
+});
+
+let jsqlURI = 'ts:jsql/index.d.ts';
+monaco.languages.typescript.javascriptDefaults.addExtraLib(libSource, jsqlURI);
+monaco.editor.createModel(libSource, 'typescript', monaco.Uri.parse(jsqlURI));

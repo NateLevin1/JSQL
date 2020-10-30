@@ -1,17 +1,13 @@
-import parseAndRun from "../parser/parseAndRun";
-import parseIdentifier from "../parser/parseIdentifier/parseIdentifier";
-import deleteTable from "../runner/drop/deleteTable";
-import databases from "../runner/databases";
-import Database from "../database/database";
+export default `
 /**
  * @example
- * ```js
+ * \`\`\`js
  * let tbl = new Table("CREATE TABLE tbl (id AUTO_INCREMENT)");
  * tbl = await tbl.create();
- * console.log(await tbl.query(`SELECT * from ${tbl.name}`));
- * ```
+ * console.log(await tbl.query(\`SELECT * from \${tbl.name}\`));
+ * \`\`\`
  */
-export default class Table {
+class Table {
     createStatement: string
     parentDbName: string
     name: string
@@ -57,3 +53,4 @@ export default class Table {
         return deleteTable(this.name, databases[this.parentDbName]);
     }
 }
+`
