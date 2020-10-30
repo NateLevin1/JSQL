@@ -22,6 +22,7 @@ test("works properly if does exist", ()=>{
         expect(databases.name.storesColumns).toStrictEqual({
             tbl: ["sc1"]
         });
+        expect(databases.name.stores.tbl).toStrictEqual(tablesValue);
     });
 });
 

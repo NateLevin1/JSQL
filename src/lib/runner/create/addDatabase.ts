@@ -21,6 +21,10 @@ export default function addDatabase(name: string) {
                 db.open()
                 .then(()=>{
                     db.tables.forEach((table)=>{
+                        Object.defineProperty(databasesRef.stores, table.name, {
+                            get: ()=>{ return table },
+                            configurable: true
+                        });
                         databasesRef.storesColumns[table.name] = table.schema.indexes.map(obj=>obj.name);
                     });
                     resolve(); 
