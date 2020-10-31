@@ -1,7 +1,12 @@
-# JavaScript Query Languague
-JSQL is a subset of [SQL](https://en.wikipedia.org/wiki/SQL) which allows developers to interface with IndexedDB using familiar SQL queries. It exposes a modern, promise-based API built on [DexieJS](https://dexie.org).
+<p align="center">
+  <img src="docs/jsQL_logo.png" width="70" height="70">
+  <h1 align="center">Easy-To-Use SQL in Javascript</h1>
+  <img src="docs/example.gif">
+</p>
 
-### Code Examples
+**JSQL** allows developers to write SQL queries that run in the browser. It exposes a modern, promise-based API built on [DexieJS](https://dexie.org).
+
+## Code Examples
 ```js
 const tbl = new Table(`CREATE TABLE tbl (
   id AUTO_INCREMENT,
@@ -27,8 +32,7 @@ console.log(result);
 */
 ```
 
-
-# Docs
+# Language Docs
 These docs contain all valid commands that can be used in JSQL. JSQL mimics the behavior of [MySQL](https://mysql.com) in many situations.
 
 
