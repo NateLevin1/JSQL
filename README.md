@@ -1,7 +1,6 @@
 <p align="center">
   <img src="docs/jsQL_logo.png" width="70" height="70">
-  <h1 align="center">Easy-To-Use SQL in Javascript</h1>
-  <img src="docs/example.gif">
+  <h1 align="center">SQL for the Browser</h1>
 </p>
 
 **JSQL** allows developers to write SQL queries that run in the browser. It exposes a modern, promise-based API built on [DexieJS](https://dexie.org).
