@@ -5,7 +5,7 @@ describe("Visual console works as intended", ()=>{
     append.mockImplementation(()=>{});
     test("Log calls append with proper arguments", ()=>{
         visualConsole.log("text");
-        expect(append).toBeCalledWith("log", `⠿ `, "text");
+        expect(append).toBeCalledWith("log", "text");
     });
     test("Error calls append with proper arguments", ()=>{
         visualConsole.error("text");

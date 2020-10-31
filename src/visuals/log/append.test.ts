@@ -10,7 +10,7 @@ describe("Appending to console", ()=>{
         createDetails.mockImplementation(()=>{});
         append.default("class", "text");
         expect(document.body.innerHTML).toBe(`
-        <div id="output"><p><span class="class">text</span></p></div>
+        <div id="output"><p class="class"><span>text</span></p></div>
         `);
         expect(createDetails).not.toBeCalled();
     });
