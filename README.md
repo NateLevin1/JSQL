@@ -1,11 +1,22 @@
 <p align="center">
-  <img src="docs/jsQL_logo.png" width="70" height="70">
+  <img src="docs/jsQL_logo.png" width="90" height="90" alt="The JSQL Logo">
   <h1 align="center">SQL for the Browser</h1>
 </p>
+<p align="center">
+<strong>JSQL</strong> allows developers to write SQL queries that run in the browser.
+<br>
+It exposes a modern, promise-based API built on <a href="https://dexie.org">DexieJS</a>.
+</p>
 
-**JSQL** allows developers to write SQL queries that run in the browser. It exposes a modern, promise-based API built on [DexieJS](https://dexie.org).
+## Features
 
-## Code Examples
+ - Custom Databases and Tables
+ - Unlimited database size and permanent changes through IndexedDB
+ - ES Module based consumption allows for tree shaking and small bundle sizes
+ - 100% test coverage in all metrics
+ - Promise-based API which takes advantage of async/await
+ 
+## Full Example
 ```js
 const tbl = new Table(`CREATE TABLE tbl (
   id AUTO_INCREMENT,
