@@ -13,7 +13,7 @@ jest.mock("../runner/drop/runDrop");
 test("select is run if keyword = select", ()=>{
     // @ts-ignore
     parseStatement.mockReturnValueOnce([{keyword:"SELECT"}]);
-    parseAndRun("");
+    parseAndRun("", {} as any);
     expect(parseStatement).toBeCalled();
     expect(runSelect).toBeCalled();
 });
@@ -21,7 +21,7 @@ test("select is run if keyword = select", ()=>{
 test("create is run if keyword = create", ()=>{
     // @ts-ignore
     parseStatement.mockReturnValueOnce([{keyword:"CREATE"}]);
-    parseAndRun("");
+    parseAndRun("", {} as any);
     expect(parseStatement).toBeCalled();
     expect(runCreate).toBeCalled();
 });
@@ -29,7 +29,7 @@ test("create is run if keyword = create", ()=>{
 test("insert is run if keyword = insert", ()=>{
     // @ts-ignore
     parseStatement.mockReturnValueOnce([{keyword:"INSERT"}]);
-    parseAndRun("");
+    parseAndRun("", {} as any);
     expect(parseStatement).toBeCalled();
     expect(runInsert).toBeCalled();
 });
@@ -37,7 +37,33 @@ test("insert is run if keyword = insert", ()=>{
 test("drop is run if keyword = insert", ()=>{
     // @ts-ignore
     parseStatement.mockReturnValueOnce([{keyword:"DROP"}]);
-    parseAndRun("");
+    parseAndRun("", {} as any);
     expect(parseStatement).toBeCalled();
     expect(runDrop).toBeCalled();
+});
+
+test("proper thing is returned with one statement", ()=>{
+    // @ts-ignore
+    parseStatement.mockReturnValueOnce([{keyword:"SELECT"}]);
+    // @ts-ignore
+    runSelect.mockResolvedValueOnce(["val"]);
+    return parseAndRun("SELECT *", {} as any).then((val)=>{
+        expect(runSelect).toBeCalled();
+        expect(val).toStrictEqual(["val"]);
+    });
+});
+
+test("proper things are returned with multiples statements", ()=>{
+    // @ts-ignore
+    parseStatement.mockReturnValueOnce([{keyword:"SELECT"}]);
+    // @ts-ignore
+    parseStatement.mockReturnValueOnce([{keyword:"SELECT"}]);
+    // @ts-ignore
+    runSelect.mockResolvedValueOnce(["val"]);
+    // @ts-ignore
+    runSelect.mockResolvedValueOnce(["val"]);
+    return parseAndRun("SELECT *; SELECT *", {} as any).then((val)=>{
+        expect(runSelect).toBeCalledTimes(2);
+        expect(val).toStrictEqual([["val"], ["val"]]);
+    });
 });
