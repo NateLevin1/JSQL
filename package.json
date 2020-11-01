@@ -8,10 +8,10 @@
     "test-ui": "./node_modules/.bin/jest visuals",
     "test-all": "./node_modules/.bin/jest",
     "get-coverage": "./node_modules/.bin/jest lib --coverage",
-    "start": "./node_modules/.bin/webpack-dev-server --open",
+    "start": "(npm run editor-typings && ./node_modules/.bin/webpack-dev-server --open)",
     "build": "./node_modules/.bin/webpack --config lib-webpack.config.js",
-    "editor-build": "./node_modules/.bin/webpack",
-    "editor-typings": "(cd src/visuals/monaco/typings/ && sh addTypings.sh)"
+    "editor-build": "(npm run editor-typings && ./node_modules/.bin/webpack)",
+    "editor-typings": "node src/visuals/monaco/typings/addTypings.js"
   },
   "repository": {
     "type": "git",
