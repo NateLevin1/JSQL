@@ -15,7 +15,7 @@ monaco.editor.defineTheme('jsql-theme', {
 
 const editor = monaco.editor.create(document.getElementById('monaco-container'), {
     value: `// JSQL has been auto-imported and top level await is enabled
-const db = await (new Database(\`CREATE DATABASE db\`).create());
+const db = await new Database(\`CREATE DATABASE db\`).create();
 const tbl = new Table(\`CREATE TABLE tbl (
   id AUTO_INCREMENT,
   firstName,

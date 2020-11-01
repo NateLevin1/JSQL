@@ -9,7 +9,7 @@ import Database from "../database/database";
  * 
  * @example
  * ```js
- * let tbl = await (new Table("CREATE TABLE tbl (id AUTO_INCREMENT)")).create();
+ * let tbl = await new Table("CREATE TABLE tbl (id AUTO_INCREMENT)").create();
  * tbl.query(`SELECT * from ${tbl.name}`);
  * ```
  */
