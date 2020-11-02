@@ -20,6 +20,8 @@ export default async function parseAndRun(statements: string, database: IDatabas
                 return runInsert(clauses, database);
             case "DROP":
                 return runDrop(clauses, database);
+            case "ALTER":
+                return Promise.reject("JSQL doesn't support ALTERing tables. Instead, change the schema in the Table constructor.");
         }
     }));
     if(results.length === 1) {

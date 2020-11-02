@@ -67,3 +67,10 @@ test("proper things are returned with multiples statements", ()=>{
         expect(val).toStrictEqual([["val"], ["val"]]);
     });
 });
+
+test("rejects on alter", ()=>{
+    // @ts-ignore
+    parseStatement.mockReturnValueOnce([{keyword:"ALTER"}]);
+
+    expect(()=>parseAndRun("ALTER TABLE name", {} as any)).rejects.toBe("JSQL doesn't support ALTERing tables. Instead, change the schema in the Table constructor.");
+});
