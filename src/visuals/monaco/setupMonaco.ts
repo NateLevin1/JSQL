@@ -212,11 +212,11 @@ monaco.languages.setMonarchTokensProvider("jsql", {
       ],
 
       string_backtick: [
-          [/(?:SELECT|select|FROM|from|WHERE|where|INSERT|insert|INTO|into|VALUES|values|CREATE|create)/, 'sql-keyword'],
+          [/(?:SELECT|select|FROM|from|WHERE|where|INSERT|insert|INTO|into|VALUES|values|CREATE|create|TRUNCATE|truncate)/, 'sql-keyword'],
           [/(?:DATABASE|database|TABLE|table) /, 'sql-keyword', "@name"],
           [/\$\{/, { token: 'delimiter.bracket', next: '@bracketCounting' }],
           [/(?:=|IGNORECASE=|<>|!=|>|<|<=|>=)/, "sql-operator"],
-          [/[^\\`$](?!SELECT|select|FROM|from|WHERE|where|INSERT|insert|INTO|into|VALUES|values|CREATE|create)/, 'string'],
+          [/[^\\`$](?!SELECT|select|FROM|from|WHERE|where|INSERT|insert|INTO|into|VALUES|values|CREATE|create|TRUNCATE|truncate)/, 'string'],
           [/@escapes/, 'string.escape'],
           [/\\./, 'string.escape.invalid'],
           [/`/, 'string', '@pop']

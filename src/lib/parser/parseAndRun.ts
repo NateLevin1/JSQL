@@ -5,6 +5,7 @@ import "./registerClauses";
 import runInsert from "../runner/insert/runInsert";
 import runDrop from "../runner/drop/runDrop";
 import { IDatabase } from "../runner/databases";
+import runTruncate from "../runner/truncate/runTruncate";
 
 export default async function parseAndRun(statements: string, database: IDatabase) {
     let results = await Promise.all(statements.split(";").map((statement) => {
@@ -22,6 +23,8 @@ export default async function parseAndRun(statements: string, database: IDatabas
                 return runDrop(clauses, database);
             case "ALTER":
                 return Promise.reject("JSQL doesn't support ALTERing tables. Instead, change the schema in the Table constructor.");
+            case "TRUNCATE":
+                return runTruncate(clauses, database);
         }
     }));
     if(results.length === 1) {
