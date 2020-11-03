@@ -162,9 +162,9 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 
 ## SELECT
 **Syntax**
-Get data from a table. The `FROM` keyword is required and is used to indicate which table the query should be executed on. The optional `WHERE` keyword is used to filter out results. **Note that if multiple columns are selected, there cannot be a space between the columns names (e.g. `SELECT x,y` NOT `SELECT x, y`.)**
+Get data from one or more tables. The optional `FROM` keyword is used to indicate which table(s) the query should be executed on (default is `*`). The optional `WHERE` keyword is used to filter out results. **Note that if multiple columns are selected, there cannot be a space between the columns names (e.g. `SELECT x,y` NOT `SELECT x, y`.)**
 ```sql
-SELECT (identifier: columnName|*|identifier[,identifier][,...]) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*[,identifier|*][,...]) [FROM (identifier: tableName|*[,identifier|*][,...])] [WHERE identifer {=operator=} identifer]
 ```
 **Return Value**
 An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
@@ -185,29 +185,32 @@ console.log(result ==
 ]
 ); // true
 ```
-## CREATE TABLE
+## CREATE
 **Syntax**
-Create a new table with the name `nameOfNewTable`. Each column is defined with an identifer and optional flags, which means **no datatypes**. Each column should be separated by a comma. **Note that the primary key is *always* the first column, and thus the first column must be indexable.**
+Create a new table or database with the name `nameOfCreation`. If creating a table, a schema is required. In the schema, each column is defined with an identifer and optional flags, which means **no datatypes**. Each column should be separated by a comma. **Note that the primary key is *always* the first column, and thus the first column must be indexable.**
 ```sql
-CREATE TABLE (identifier: nameOfNewTable) (
+CREATE (TABLE|DATABASE) (identifier: nameOfCreation) [schema: (
+	(identifier: primaryKeyName) [AUTO_INCREMENT] [NO_INDEX] [UNIQUE],
 	(identifier: column1Name) [AUTO_INCREMENT] [NO_INDEX] [UNIQUE],
 	(identifier: column2Name) [AUTO_INCREMENT] [NO_INDEX] [UNIQUE],
 	...
-)
+)]
 ```
 `AUTO_INCREMENT`:
 Automatically increments this column when new data is added. Column must be of type Number.
+
 `NO_INDEX`:
 Do not allow using a `WHERE` clause on this column. **All columns that are not searched for (large blobs etc) *must* have this flag, otherwise subsequent queries will fail.**
+
 `UNIQUE`:
 Will throw an error if two rows have the same value for this column.
 
 **Return Value**
-`null`.
+`Promise<undefined>`.
 
 **Example**
 ```js
-const db = new Table(`CREATE TABLE db (
+const tbl = new Table(`CREATE TABLE tbl (
 	title,
 	author,
 	coverPicture NO_INDEX,
@@ -224,7 +227,7 @@ INSERT INTO (identifier: tableName) VALUES
 ((expression: column1Value), [(expression: column2Value)], [...] )
 ```
 **Return Value**
-`null`.
+`Promise<undefined>`.
 
 **Example**
 ```js
@@ -235,12 +238,12 @@ db.query(`INSERT INTO ${table.name} VALUES
 
 ## DROP
 **Syntax**
-Delete the table `tableName`.
+Delete the table or database `dropItem`.
 ```sql
-DROP TABLE (identifier: tableName)
+DROP (TABLE|DATABASE) (identifier: dropItem)
 ```
 **Return Value**
-`null`.
+`Promise<undefined>`.
 
 **Example**
 ```js
@@ -254,7 +257,7 @@ Delete all rows in the table `tableName`. Note that the word `TABLE` is optional
 TRUNCATE [TABLE] (identifier: tableName)
 ```
 **Return Value**
-`null`.
+`Promise<undefined>`.
 
 **Example**
 ```js
