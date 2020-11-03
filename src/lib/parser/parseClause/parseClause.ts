@@ -3,23 +3,34 @@ import parseIdentifier from "../parseIdentifier/parseIdentifier";
 import parseMultiIdentifier from "../parseMultiIdentifier/parseMultiIdentifier";
 import parsePredicate from "../parsePredicate/parsePredicate";
 
-export const clauses: IClauses = { 
-    clauses: {},
-    register: (keyword: (string|"KEYWORD"), requiredItems: (string|string[])[])=>{
+export const clauses = { 
+    clauses: {} as { [key: string]: { requiredItems: (string|string[]|ItemWithOptions)[] }},
+    /**
+     * Register a clause so that it can be parsed.
+     * @example
+     * ```js
+     * clauses.register("KEYWORD", ["REQUIRED", "identifier"]) // matches 'KEYWORD REQUIRED abc'
+     * clauses.register("KEYWORD", [["a", "b"], "identifier"]) // matches 'KEYWORD a abc' and 'KEYWORD b abc'
+     * clauses.register("KEYWORD", [{optional: true, word:"OPTIONAL"}, "identifier"]) // matches 'KEYWORD abc' and 'KEYWORD OPTIONAL abc'
+     * ```
+     */
+    register: (keyword: (string|"KEYWORD"), requiredItems: (string|string[]|ItemWithOptions)[])=>{
         // clauses.register("SELECT", ["identifier"]);
         clauses.clauses[keyword.toUpperCase()] = {
-            requiredItems: requiredItems.map((str)=>{
-                if(str instanceof Array) {
-                    return str.map(val=>val.toLocaleLowerCase());
+            requiredItems: requiredItems.map((item)=>{
+                if(item instanceof Array) {
+                    return item.map(val=>val.toLocaleLowerCase());
+                } else if(item instanceof Object) {
+                    return {optional: item.optional, word: item.word}
                 }
-                return str.toLocaleLowerCase();
+                return item.toLocaleLowerCase();
             })
         };
     }
 }
-interface IClauses {
-    clauses: { [key: string]: { requiredItems: (string|string[])[] }};
-    register: (keyword: string, requiredItems: (string|string[])[])=>void;
+interface ItemWithOptions {
+    optional: boolean,
+    word: string
 }
 
 export function parseClause(str: string) {
@@ -63,8 +74,15 @@ export function parseClause(str: string) {
                 break;
             default:
                 const parsedKeyword = parseIdentifier(restOfStr);
+
                 const valArr = val instanceof Array ? [...val] : [val];
-                if(!valArr.map(val=>val.toLocaleLowerCase()).includes(parsedKeyword.identifier.toLocaleLowerCase())) {
+                if((val as ItemWithOptions)?.optional) { // if it is optional we should not run the else if no matter what
+                    if (parsedKeyword.identifier !== (val as ItemWithOptions)?.word) {
+                        // if optional and next word is not optional word then act as if optional word was there
+                        parsedKeyword.identifier = (val as ItemWithOptions)?.word;
+                        parsedKeyword.rest = restOfStr; // keep the same as before since nothing changed
+                    }
+                } else if(!valArr.map((val: string)=>val.toLocaleLowerCase()).includes(parsedKeyword.identifier.toLocaleLowerCase())) {
                     throw "Expected keyword(s) "+valArr.join(" or ")+" but got "+parsedKeyword.identifier+" in "+keyword+" clause.";
                 }
                 clauseAST.items.push(parsedKeyword.identifier);
