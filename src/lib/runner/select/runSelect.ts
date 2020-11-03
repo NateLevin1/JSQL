@@ -3,7 +3,7 @@ import { IDatabase } from "../databases";
 
 export default async function runSelect(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const columns: string[] = clauses[0].items[0];
-    let storeNames: string[] = [];
+    let storeNames: string[] = !!database.storesColumns ? [...Object.keys(database.storesColumns)] : []; // be * by default
     let wherePredicate: (undefined|{left: string, operator: string, right: string});
 
     for(const obj of clauses) {
@@ -12,9 +12,10 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
                 continue;
             case "FROM":
                 const names = obj.items[0];
+                storeNames = []; // since it is * by default we need to make sure it is a clean slate
                 for(const name of names) {
                     if(name === "*") {
-                        storeNames.push(...Object.keys(database.stores));
+                        storeNames.push(...Object.keys(database.storesColumns));
                     } else {
                         storeNames.push(name);
                     }
