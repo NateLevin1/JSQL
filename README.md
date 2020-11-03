@@ -171,7 +171,7 @@ An array of objects that contain the matched data. The objects have the keys spe
 
 **Example**
 ```js
-const result = await db.query(`SELECT name,lastName FROM ${db.name}`);
+const result = await db.query(`SELECT name,lastName FROM ${table.name}`);
 console.log(result == 
 [
 	{
@@ -228,7 +228,7 @@ INSERT INTO (identifier: tableName) VALUES
 
 **Example**
 ```js
-db.query(`INSERT INTO ${db.name} VALUES
+db.query(`INSERT INTO ${table.name} VALUES
 ('John', 'Doe', 'johndoe@example.com'),
 ('Jill', 'Doe', 'jilldoe@example.com')`);
 ```
@@ -244,5 +244,19 @@ DROP TABLE (identifier: tableName)
 
 **Example**
 ```js
-db.query(`DROP TABLE ${db.name}`);
+db.query(`DROP TABLE ${table.name}`);
+```
+
+## TRUNCATE
+**Syntax**
+Delete all rows in the table `tableName`. Note that the word `TABLE` is optional.
+```sql
+TRUNCATE [TABLE] (identifier: tableName)
+```
+**Return Value**
+`null`.
+
+**Example**
+```js
+db.query(`TRUNCATE TABLE ${table.name}`);
 ```
