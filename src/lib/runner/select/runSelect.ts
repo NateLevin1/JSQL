@@ -1,5 +1,6 @@
 import { Table } from "dexie";
 import { IDatabase } from "../databases";
+import where, { WherePredicate } from "../where/where";
 
 export default async function runSelect(clauses: {keyword: string, items:any[]}[], database: IDatabase) {
     const columns: string[] = clauses[0].items[0];
@@ -70,35 +71,10 @@ export default async function runSelect(clauses: {keyword: string, items:any[]}[
     return resultsByStore;
 }
 
-const getContents = (store: Table, wherePredicate: (undefined|{left: string, operator: string, right: string}))=>{
-    let shouldToArray = store as any;
+const getContents = (store: Table, wherePredicate: WherePredicate)=>{
+    let collection = store.toCollection();
     if(wherePredicate) {
-        shouldToArray = shouldToArray.where(wherePredicate.left);
-        const right = eval(wherePredicate.right);
-        switch(wherePredicate.operator) {
-            case "=":
-                shouldToArray = shouldToArray.equals(right);
-                break;
-            case "IGNORECASE=":
-                shouldToArray = shouldToArray.equalsIgnoreCase(right);
-                break;
-            case "<>":
-            case "!=":
-                shouldToArray = shouldToArray.notEqual(right);
-                break;
-            case ">":
-                shouldToArray = shouldToArray.above(right);
-                break;
-            case ">=":
-                shouldToArray = shouldToArray.aboveOrEqual(right);
-                break;
-            case "<":
-                shouldToArray = shouldToArray.below(right);
-                break;
-            case "<=":
-                shouldToArray = shouldToArray.belowOrEqual(right);
-                break;
-        }
+        collection = where(store, wherePredicate);
     }
-    return shouldToArray.toArray();
+    return collection.toArray();
 }
