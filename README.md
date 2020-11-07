@@ -164,7 +164,7 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 **Syntax**
 Get data from one or more tables. The optional `FROM` keyword is used to indicate which table(s) the query should be executed on (default is `*`). The optional `WHERE` keyword is used to filter out results. **Note that if multiple columns are selected, there cannot be a space between the columns names (e.g. `SELECT x,y` NOT `SELECT x, y`.)**
 ```sql
-SELECT (identifier: columnName|*[,identifier|*][,...]) [FROM (identifier: tableName|*[,identifier|*][,...])] [WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*[,identifier|*][,...]) [FROM (identifier: tableName|*[,identifier|*][,...])] [WHERE identifer {=operator=} expression]
 ```
 **Return Value**
 An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
@@ -252,7 +252,7 @@ db.query(`DROP TABLE ${table.name}`);
 
 ## TRUNCATE
 **Syntax**
-Delete all rows in the table `tableName`. Note that the word `TABLE` is optional.
+Delete all rows in the table `tableName`. Note that the word `TABLE` is optional. This is equivalent to running a `DELETE FROM` statement without a `WHERE` clause, but it is much faster.
 ```sql
 TRUNCATE [TABLE] (identifier: tableName)
 ```
@@ -262,4 +262,18 @@ TRUNCATE [TABLE] (identifier: tableName)
 **Example**
 ```js
 db.query(`TRUNCATE TABLE ${table.name}`);
+```
+
+## DELETE FROM
+**Syntax**
+Delete rows in the table `tableName` where the rows deleted are chosen by the `WHERE` clause. If the `WHERE` clause is omitted it will delete all rows in the table, however the `TRUNCATE` statement is faster in this case.
+```sql
+DELETE FROM (identifier: tableName) [WHERE identifier {=operator=} expression]
+```
+**Return Value**
+`Promise<number>` where the number is the number of rows deleted.
+
+**Example**
+```js
+db.query(`DELETE FROM ${table.name} WHERE id > 2`);
 ```
