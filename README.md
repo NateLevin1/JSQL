@@ -285,7 +285,7 @@ Updates table(s)'s values using the SET clause on all rows chosen in the optiona
 UPDATE (identifier: tableName|*) SET (identifier: columnName) = (expression) [WHERE identifier {operator} expression]
 ```
 **Return Value**
-`Promise<number>` where the number is the number of rows deleted.
+`Promise<number[]>` where the numbers are the number of rows changed.
 
 **Example**
 ```js
