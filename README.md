@@ -70,7 +70,7 @@ FROM (identifier: tablename)
 
 For example, a simple `SELECT` will look like the following in these docs
 ```sql
-SELECT (identifier: columnName|*) FROM (identifier: tableName|*) [WHERE identifer {=operator=} identifer]
+SELECT (identifier: columnName|*) FROM (identifier: tableName|*) [WHERE identifer {operator=} identifer]
 ```
 
 ## Term Definitions
@@ -164,7 +164,7 @@ All Javascript data types that can be [structure cloned](https://developer.mozil
 **Syntax**
 Get data from one or more tables. The optional `FROM` keyword is used to indicate which table(s) the query should be executed on (default is `*`). The optional `WHERE` keyword is used to filter out results. **Note that if multiple columns are selected, there cannot be a space between the columns names (e.g. `SELECT x,y` NOT `SELECT x, y`.)**
 ```sql
-SELECT (identifier: columnName|*[,identifier|*][,...]) [FROM (identifier: tableName|*[,identifier|*][,...])] [WHERE identifer {=operator=} expression]
+SELECT (identifier: columnName|*[,identifier|*][,...]) [FROM (identifier: tableName|*[,identifier|*][,...])] [WHERE identifer {operator} expression]
 ```
 **Return Value**
 An array of objects that contain the matched data. The objects have the keys specified in the first identifier (or in the case of `*` have the keys of all columns in the database).
@@ -268,7 +268,7 @@ db.query(`TRUNCATE TABLE ${table.name}`);
 **Syntax**
 Delete rows in the table `tableName` where the rows deleted are chosen by the `WHERE` clause. If the `WHERE` clause is omitted it will delete all rows in the table, however the `TRUNCATE` statement is faster in this case.
 ```sql
-DELETE FROM (identifier: tableName) [WHERE identifier {=operator=} expression]
+DELETE FROM (identifier: tableName|*) [WHERE identifier {operator} expression]
 ```
 **Return Value**
 `Promise<number>` where the number is the number of rows deleted.
@@ -276,4 +276,18 @@ DELETE FROM (identifier: tableName) [WHERE identifier {=operator=} expression]
 **Example**
 ```js
 db.query(`DELETE FROM ${table.name} WHERE id > 2`);
+```
+
+## UPDATE
+**Syntax**
+Updates table(s)'s values using the SET clause on all rows chosen in the optional WHERE clause. If the WHERE clause is omitted, the updates will be made to all rows.
+```sql
+UPDATE (identifier: tableName|*) SET (identifier: columnName) = (expression) [WHERE identifier {operator} expression]
+```
+**Return Value**
+`Promise<number>` where the number is the number of rows deleted.
+
+**Example**
+```js
+db.query(`UPDATE ${table.name} SET isMoreThan5 = true WHERE id > 5`);
 ```
