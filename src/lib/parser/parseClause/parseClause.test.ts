@@ -1,10 +1,6 @@
 import { parseClause, clauses } from "./parseClause";
-import { parseExpression } from "../parseExpression/parseExpression";
-import parsePredicate from "../parsePredicate/parsePredicate";
 import parseMultiIdentifier from "../parseMultiIdentifier/parseMultiIdentifier";
 
-jest.mock("../parseExpression/parseExpression");
-jest.mock("../parsePredicate/parsePredicate");
 jest.mock("../parseMultiIdentifier/parseMultiIdentifier");
 
 test("Identifiers work properly", ()=>{
@@ -27,20 +23,22 @@ test("MultiIdentifiers work properly", ()=>{
     expect(parseClause("SELECT one,two")).toStrictEqual({keyword:"SELECT", items:[["one", "two"]], rest:""});
 });
 
+test("MultiPredicates work properly", ()=>{
+    clauses.clauses = {};
+    clauses.register("SET", ["multi_predicate"]);
+    expect(parseClause("SET x = 1, y = 2")).toStrictEqual({keyword:"SET", items:[[{left:"x", operator:"=", right:"1"}, {left:"y", operator:"=", right:"2"}]], rest:""});
+});
+
 test("Predicates work properly", ()=>{
     clauses.clauses = {};
     clauses.register("WHERE", ["predicate"]);
-    // @ts-ignore
-    parsePredicate.mockReturnValueOnce({left: "x", operator: "=", right: "1", rest: ""});
     expect(parseClause("WHERE x = 1")).toStrictEqual({keyword: "WHERE", items:[{ left: "x", operator: "=", right: "1" }], rest:""});
 });
 
 test("Expressions work properly", ()=>{
     clauses.clauses = {};
     clauses.register("TEST", ["expression"]);
-    // @ts-ignore
-    parseExpression.mockReturnValueOnce({expression:"1+1", rest:""});
-    expect(parseClause("TEST 1+1")).toStrictEqual({keyword: "TEST", items:["1+1"], rest:""});
+    expect(parseClause("TEST (1+1)")).toStrictEqual({keyword: "TEST", items:["(1+1)"], rest:""});
 });
 
 test("rest works properly", ()=>{

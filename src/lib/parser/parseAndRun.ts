@@ -7,6 +7,7 @@ import runDrop from "../runner/drop/runDrop";
 import { IDatabase } from "../runner/databases";
 import runTruncate from "../runner/truncate/runTruncate";
 import runDelete from "../runner/delete/runDelete";
+import runUpdate from "../runner/update/runUpdate";
 
 export default async function parseAndRun(statements: string, database: IDatabase) {
     let results = await Promise.all(statements.split(";").map((statement) => {
@@ -28,6 +29,8 @@ export default async function parseAndRun(statements: string, database: IDatabas
                 return runTruncate(clauses, database);
             case "DELETE":
                 return runDelete(clauses, database);
+            case "UPDATE":
+                return runUpdate(clauses, database);
         }
     }));
     if(results.length === 1) {

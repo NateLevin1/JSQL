@@ -1,6 +1,7 @@
 import { parseExpression } from "../parseExpression/parseExpression";
 import parseIdentifier from "../parseIdentifier/parseIdentifier";
 import parseMultiIdentifier from "../parseMultiIdentifier/parseMultiIdentifier";
+import parseMultiPredicate from "../parseMultiPredicate/parseMultiPredicate";
 import parsePredicate from "../parsePredicate/parsePredicate";
 
 export const clauses = { 
@@ -66,6 +67,11 @@ export function parseClause(str: string) {
                 const parsedExpression = parseExpression(restOfStr);
                 clauseAST.items.push(parsedExpression.expression);
                 restOfStr = parsedExpression.rest;
+                break;
+            case "multi_predicate":
+                const parsedMultiPredicate =  parseMultiPredicate(restOfStr);
+                clauseAST.items.push(parsedMultiPredicate.predicates);
+                restOfStr = parsedMultiPredicate.rest;
                 break;
             case "rest":
                 const removedSpace = parseIdentifier(restOfStr);

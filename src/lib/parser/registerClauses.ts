@@ -14,3 +14,6 @@ clauses.register("DROP", [["TABLE", "DATABASE"], "identifier"]);
 clauses.register("TRUNCATE", [{optional: true, word:"TABLE"}, "identifier"]);
 
 clauses.register("DELETE", ["FROM", "multi_identifier"]);
+
+clauses.register("UPDATE", ["multi_identifier"]);
+clauses.register("SET", ["multi_predicate"]);

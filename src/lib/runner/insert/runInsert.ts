@@ -37,7 +37,7 @@ export default function runInsert(clauses: {keyword: string, items:any[]}[], dat
         row = row.slice(1, row.length-1);
 
         let valAtColumns = row.split(",").map(val=>{  // eval to turn string numbers into numbers etc
-            return Function(`"use strict"; return (${val})`)();
+            return eval(val);
         });
         processedNewRows[i] = {};
 

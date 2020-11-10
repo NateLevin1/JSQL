@@ -6,6 +6,7 @@ import runInsert from "../runner/insert/runInsert";
 import runDrop from "../runner/drop/runDrop";
 import runTruncate from "../runner/truncate/runTruncate";
 import runDelete from "../runner/delete/runDelete";
+import runUpdate from "../runner/update/runUpdate";
 jest.mock("../runner/create/runCreate");
 jest.mock("../runner/select/runSelect");
 jest.mock("../runner/insert/runInsert");
@@ -13,6 +14,7 @@ jest.mock("./parseStatement/parseStatement");
 jest.mock("../runner/drop/runDrop");
 jest.mock("../runner/truncate/runTruncate");
 jest.mock("../runner/delete/runDelete");
+jest.mock("../runner/update/runUpdate");
 
 test("select is run if keyword = select", ()=>{
     // @ts-ignore
@@ -60,6 +62,14 @@ test("delete is run if keyword = delete", ()=>{
     parseAndRun("", {} as any);
     expect(parseStatement).toBeCalled();
     expect(runDelete).toBeCalled();
+});
+
+test("update is run if keyword = update", ()=>{
+    // @ts-ignore
+    parseStatement.mockReturnValueOnce([{keyword:"UPDATE"}]);
+    parseAndRun("", {} as any);
+    expect(parseStatement).toBeCalled();
+    expect(runUpdate).toBeCalled();
 });
 
 test("proper thing is returned with one statement", ()=>{
