@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/jsQL_logo.png" width="90" height="90" alt="The JSQL Logo">
+  <img src="https://raw.githubusercontent.com/UltimatePro-Grammer/JSQL/master/docs/jsQL_logo.png" width="90" height="90" alt="The JSQL Logo">
   <h1 align="center">SQL for the Browser</h1>
 </p>
 <p align="center">

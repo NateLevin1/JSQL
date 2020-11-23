@@ -11,7 +11,8 @@
     "start": "(npm run editor-typings && ./node_modules/.bin/webpack-dev-server --open)",
     "build": "./node_modules/.bin/webpack --config lib-webpack.config.js",
     "editor-build": "(npm run editor-typings && ./node_modules/.bin/webpack)",
-    "editor-typings": "node src/visuals/monaco/typings/addTypings.js"
+    "editor-typings": "node src/visuals/monaco/typings/addTypings.js",
+    "doc": "./node_modules/.bin/typedoc --out docs/docs src/lib/database/database.ts src/lib/table/table.ts"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "monaco-editor-webpack-plugin": "^2.0.0",
     "style-loader": "^1.2.1",
     "ts-loader": "^8.0.4",
+    "typedoc": "^0.19.2",
     "typescript": "^4.0.3",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
