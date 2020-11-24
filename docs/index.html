@@ -83,8 +83,11 @@
 					<li>100% test coverage in all metrics</li>
 					<li>Promise-based API which takes advantage of async/await</li>
 				</ul>
-				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
-					<h2>Example</h2>
+				<a href="#examples" id="examples" style="color: inherit; text-decoration: none;">
+					<h2>Examples</h2>
+				</a>
+				<a href="#try-these-on-the-editor" id="try-these-on-the-editor" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://ultimatepro-grammer.github.io/JSQL/editor/index.html">Try these on the editor!</a></h3>
 				</a>
 				<pre><code class="language-js"><span class="hljs-keyword">const</span> tbl = <span class="hljs-keyword">new</span> Table(<span class="hljs-string">`CREATE TABLE tbl (
   id AUTO_INCREMENT,
@@ -108,9 +111,47 @@
   { id:2, firstName: &quot;Jane&quot;, lastName:&quot;Doe&quot;, email:&quot;janedoe@example.com&quot;}
 ] 
 */</span></code></pre>
-				<a href="#try-these-on-the-editor" id="try-these-on-the-editor" style="color: inherit; text-decoration: none;">
-					<h3><a href="https://ultimatepro-grammer.github.io/JSQL/editor/index.html">Try these on the editor.</a></h3>
-				</a>
+				<pre><code class="language-js"><span class="hljs-comment">// create the database</span>
+<span class="hljs-keyword">const</span> library = <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> Database(<span class="hljs-string">`CREATE DATABASE library`</span>).create();
+
+<span class="hljs-comment">// create the tables</span>
+<span class="hljs-keyword">const</span> books = <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> Table(<span class="hljs-string">`CREATE TABLE books (
+  id AUTO_INCREMENT,
+  title,
+  author,
+  isCheckedOut
+)`</span>, library).create();
+<span class="hljs-keyword">const</span> users = <span class="hljs-keyword">await</span> <span class="hljs-keyword">new</span> Table(<span class="hljs-string">`CREATE TABLE users (
+  id AUTO_INCREMENT,
+  firstName,
+  lastName,
+  hasCheckedOutBook,
+  checkedOutBookTitle
+)`</span>, library).create();
+
+<span class="hljs-comment">// add data to the tables if they are empty</span>
+<span class="hljs-keyword">if</span>(<span class="hljs-keyword">await</span> books.isEmpty()) {
+  <span class="hljs-keyword">await</span> books.query(<span class="hljs-string">`INSERT INTO <span class="hljs-subst">${books.name}</span> VALUES 
+  (&quot;Moby Dick&quot;, &quot;Herman Melville&quot;,  false),
+  (&quot;War and Peace&quot;, &quot;Leo Tolstoy&quot;,  false),
+  (&quot;Hamlet&quot;, &quot;William Shakespeare&quot;, false)
+  `</span>)
+}
+<span class="hljs-keyword">if</span>(<span class="hljs-keyword">await</span> users.isEmpty()) {
+  <span class="hljs-keyword">await</span> users.query(<span class="hljs-string">`INSERT INTO <span class="hljs-subst">${users.name}</span> VALUES
+  (&quot;Jane&quot;, &quot;Doe&quot;, false, &quot;&quot;),
+  (&quot;John&quot;, &quot;Doe&quot;, false, &quot;&quot;)
+  `</span>);
+}
+
+<span class="hljs-comment">// do something with that data</span>
+<span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">await</span> users.query(<span class="hljs-string">`SELECT hasCheckedOutBook FROM <span class="hljs-subst">${users.name}</span> WHERE id = 1`</span>))[<span class="hljs-number">0</span>]) {
+  <span class="hljs-comment">// if Jane hasn&#x27;t checked out a book, check out Moby Dick for her</span>
+  users.query(<span class="hljs-string">`UPDATE <span class="hljs-subst">${users.name}</span> SET hasCheckedOutBook = true, checkedOutBookTitle = &quot;Moby Dick&quot; WHERE id = 1`</span>);
+}
+
+<span class="hljs-comment">// log out the new user data</span>
+<span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">await</span> users.query(<span class="hljs-string">`SELECT * FROM <span class="hljs-subst">${users.name}</span>`</span>));</code></pre>
 				<br>
 				<p>Click <a href="https://ultimatepro-grammer.github.io/JSQL/language/index.html">here</a> to visit the JSQL language docs.</p>
 				<p>Click <a href="https://ultimatepro-grammer.github.io/JSQL/docs/index.html">here</a> to see the API references.</p>
