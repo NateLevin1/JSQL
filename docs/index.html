@@ -1,0 +1,229 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>jsql</title>
+	<meta name="description" content="Documentation for jsql">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">jsql</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>jsql</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p align="center">
+					<img src="https://raw.githubusercontent.com/UltimatePro-Grammer/JSQL/master/docs/jsQL_logo.png" width="90" height="90" alt="The JSQL Logo">
+					<h1 align="center">SQL for the Browser</h1>
+				</p>
+				<p align="center">
+					<strong>JSQL</strong> allows developers to write SQL queries that run in the browser.
+					<br>
+					It exposes a modern, promise-based API built on <a href="https://dexie.org">DexieJS</a>.
+				</p>
+				<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+					<h2>Features</h2>
+				</a>
+				<ul>
+					<li>Custom Databases and Tables</li>
+					<li>Unlimited database size and permanent changes through IndexedDB</li>
+					<li>ES Module based consumption allows for tree shaking and small bundle sizes</li>
+					<li>100% test coverage in all metrics</li>
+					<li>Promise-based API which takes advantage of async/await</li>
+				</ul>
+				<a href="#example" id="example" style="color: inherit; text-decoration: none;">
+					<h2>Example</h2>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> tbl = <span class="hljs-keyword">new</span> Table(<span class="hljs-string">`CREATE TABLE tbl (
+  id AUTO_INCREMENT,
+  firstName,
+  lastName,
+  email
+)`</span>);
+<span class="hljs-keyword">await</span> tbl.create();
+<span class="hljs-keyword">if</span>(<span class="hljs-keyword">await</span> tbl.isEmpty()) {
+  <span class="hljs-keyword">await</span> tbl.query(<span class="hljs-string">`INSERT INTO <span class="hljs-subst">${tbl.name}</span> VALUES
+  (&#x27;John&#x27;, &#x27;Doe&#x27;, &#x27;johndoe@example.com&#x27;),
+  (&#x27;Jane&#x27;, &#x27;Doe&#x27;, &#x27;janedoe@example.com&#x27;),
+  (&#x27;Joe&#x27;, &#x27;Schmoe&#x27;, &#x27;joeschmoe@example.com&#x27;),
+  (&#x27;Jill&#x27;, &#x27;Schmoe&#x27;, &#x27;jillschmoe@example.com&#x27;)`</span>);
+}
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> tbl.query(<span class="hljs-string">`SELECT * FROM <span class="hljs-subst">${tbl.name}</span> WHERE lastName = &#x27;Doe&#x27;`</span>);
+<span class="hljs-built_in">console</span>.log(result);
+<span class="hljs-comment">/* 
+[
+  { id:1, firstName: &quot;John&quot;, lastName:&quot;Doe&quot;, email:&quot;johndoe@example.com&quot;},
+  { id:2, firstName: &quot;Jane&quot;, lastName:&quot;Doe&quot;, email:&quot;janedoe@example.com&quot;}
+] 
+*/</span></code></pre>
+				<a href="#try-these-on-the-editor" id="try-these-on-the-editor" style="color: inherit; text-decoration: none;">
+					<h3><a href="https://ultimatepro-grammer.github.io/JSQL/editor/index.html">Try these on the editor.</a></h3>
+				</a>
+				<br>
+				<p>Click <a href="https://ultimatepro-grammer.github.io/JSQL/language/index.html">here</a> to visit the JSQL language docs.</p>
+				<p>Click <a href="https://ultimatepro-grammer.github.io/JSQL/docs/index.html">here</a> to see the API references.</p>
+				<p>Click <a href="https://ultimatepro-grammer.github.io/JSQL/index.html">here</a> for more info on JSQL.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_database_database_.html">&quot;database/database&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_table_table_.html">&quot;table/table&quot;</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parseandrun_.html">&quot;parser/parse<wbr>And<wbr>Run&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parseclause_parseclause_.html">&quot;parser/parse<wbr>Clause/parse<wbr>Clause&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parseexpression_parseexpression_.html">&quot;parser/parse<wbr>Expression/parse<wbr>Expression&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parseidentifier_parseidentifier_.html">&quot;parser/parse<wbr>Identifier/parse<wbr>Identifier&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parsemultiidentifier_parsemultiidentifier_.html">&quot;parser/parse<wbr>Multi<wbr>Identifier/parse<wbr>Multi<wbr>Identifier&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parsemultipredicate_parsemultipredicate_.html">&quot;parser/parse<wbr>Multi<wbr>Predicate/parse<wbr>Multi<wbr>Predicate&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parseoperator_parseoperator_.html">&quot;parser/parse<wbr>Operator/parse<wbr>Operator&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parsepredicate_parsepredicate_.html">&quot;parser/parse<wbr>Predicate/parse<wbr>Predicate&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_parsestatement_parsestatement_.html">&quot;parser/parse<wbr>Statement/parse<wbr>Statement&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_registerclauses_.html">&quot;parser/register<wbr>Clauses&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_parser_removenoise_removenoise_.html">&quot;parser/remove<wbr>Noise/remove<wbr>Noise&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_create_adddatabase_.html">&quot;runner/create/add<wbr>Database&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_create_runcreate_.html">&quot;runner/create/run<wbr>Create&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_databases_.html">&quot;runner/databases&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_delete_rundelete_.html">&quot;runner/delete/run<wbr>Delete&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_drop_deletetable_.html">&quot;runner/drop/delete<wbr>Table&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_drop_rundrop_.html">&quot;runner/drop/run<wbr>Drop&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_insert_runinsert_.html">&quot;runner/insert/run<wbr>Insert&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_select_runselect_.html">&quot;runner/select/run<wbr>Select&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_truncate_runtruncate_.html">&quot;runner/truncate/run<wbr>Truncate&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_update_runupdate_.html">&quot;runner/update/run<wbr>Update&quot;</a>
+					</li>
+					<li class=" tsd-kind-module tsd-is-external">
+						<a href="modules/_runner_where_where_.html">&quot;runner/where/where&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
