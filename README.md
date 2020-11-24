@@ -16,7 +16,8 @@ It exposes a modern, promise-based API built on <a href="https://dexie.org">Dexi
  - 100% test coverage in all metrics
  - Promise-based API which takes advantage of async/await
  
-## Example
+## Examples
+### [Try these on the editor!](https://ultimatepro-grammer.github.io/JSQL/editor/index.html)
 ```js
 const tbl = new Table(`CREATE TABLE tbl (
   id AUTO_INCREMENT,
@@ -42,7 +43,50 @@ console.log(result);
 */
 ```
 
-### [Try these on the editor.](https://ultimatepro-grammer.github.io/JSQL/editor/index.html)
+
+```js
+// create the database
+const library = await new Database(`CREATE DATABASE library`).create();
+
+// create the tables
+const books = await new Table(`CREATE TABLE books (
+  id AUTO_INCREMENT,
+  title,
+  author,
+  isCheckedOut
+)`, library).create();
+const users = await new Table(`CREATE TABLE users (
+  id AUTO_INCREMENT,
+  firstName,
+  lastName,
+  hasCheckedOutBook,
+  checkedOutBookTitle
+)`, library).create();
+
+// add data to the tables if they are empty
+if(await books.isEmpty()) {
+  await books.query(`INSERT INTO ${books.name} VALUES 
+  ("Moby Dick", "Herman Melville",  false),
+  ("War and Peace", "Leo Tolstoy",  false),
+  ("Hamlet", "William Shakespeare", false)
+  `)
+}
+if(await users.isEmpty()) {
+  await users.query(`INSERT INTO ${users.name} VALUES
+  ("Jane", "Doe", false, ""),
+  ("John", "Doe", false, "")
+  `);
+}
+
+// do something with that data
+if(!(await users.query(`SELECT hasCheckedOutBook FROM ${users.name} WHERE id = 1`))[0]) {
+  // if Jane hasn't checked out a book, check out Moby Dick for her
+  users.query(`UPDATE ${users.name} SET hasCheckedOutBook = true, checkedOutBookTitle = "Moby Dick" WHERE id = 1`);
+}
+
+// log out the new user data
+console.log(await users.query(`SELECT * FROM ${users.name}`));
+```
 
 <br>
 
