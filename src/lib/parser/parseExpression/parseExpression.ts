@@ -52,10 +52,18 @@ export const parseExpression = (str: string, options: {forceParentheses: boolean
                 matched = getFromMatch(str.match(/ *(-?[\d_]+)([\s\S]*)/), str);
             } else {
                 let firstIdent = parseIdentifier(str);
+                const commaIndex = firstIdent.identifier.indexOf(",");
+                const wasCommaFound = commaIndex !== -1;
+                // get before any commas
                 let word = firstIdent.identifier;
+                let restOfIdent = firstIdent.rest;
+                if(wasCommaFound) {
+                    restOfIdent = word.slice(commaIndex)+restOfIdent;
+                    word = word.slice(0, commaIndex);
+                }
                 // specific use cases where we already know what we should do
                 if(word === "true" || word === "false" || word === "undefined" || word === "null") {
-                    matched = { expression: word, rest: firstIdent.rest };
+                    matched = { expression: word, rest: restOfIdent };
                 } else {
                     // just use rest
                     matched = { expression: str, rest: "" };

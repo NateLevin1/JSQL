@@ -5,7 +5,7 @@ export default function parseMultiPredicate(str: string) {
     // `str` is in the form " x = 1" or " x = 1, y = 1" or " x = 1, y = 1 WHERE id = 2"
     let nextIdentifier = parseIdentifier(str).identifier;
     let predicates: (Omit<ReturnType<typeof parsePredicate>, "rest">)[] = [];
-    while (nextIdentifier !== "WHERE" && str.trim() !== "") {
+    while (nextIdentifier !== "WHERE" && str !== "") {
         if(str.startsWith(",")) {
             str = str.slice(1);
         }
@@ -13,6 +13,7 @@ export default function parseMultiPredicate(str: string) {
         predicates.push(nextPredicate);
         str = restOfPredicate;
         nextIdentifier = parseIdentifier(str).identifier;
+        str = str.trim();
     }
     return {predicates, rest: str}
 }

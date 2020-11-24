@@ -29,9 +29,10 @@ const evaluate = (content: string)=>{ // async so eval is async
         // webpack & eval works very weird so this is how we do it
         var Table = ImportedTable;
         var Database = ImportedDatabase;
-        return eval(`(async () => {${content}\n})()`).catch((e:any)=>{visualConsole.error(e);}).finally(()=>{reset();});
+        return eval(`(async () => {${content}\n})()`).catch((e:any)=>{visualConsole.error(e);console.error(e);}).finally(()=>{reset();});
     } catch(e) {
         visualConsole.error(e);
+        console.error(e);
         reset();
     }
 }

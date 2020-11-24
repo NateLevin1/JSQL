@@ -24,6 +24,6 @@ function setTheme(isChecked: boolean) {
 setTheme(highlighting.checked);
 
 export default function checkFromStorage() {
-    return highlighting.checked = (localStorage.getItem("sql-highlighting") ?? "true") === "true";
+    return highlighting.checked = (localStorage.getItem("sql-highlighting") ?? "false") === "true";
 }
 

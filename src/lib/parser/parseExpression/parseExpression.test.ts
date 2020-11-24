@@ -68,6 +68,12 @@ describe("finds correct item without parens if forceParentheses is false", () =>
             rest: " rest"
         });
     });
+    test("works with keyword if comma", () => {
+        expect(parseExpression("true, rest", { forceParentheses: false })).toStrictEqual({
+            expression: "true",
+            rest: ", rest"
+        });
+    });
     test("works with object literals", () => {
         expect(parseExpression("{content} rest", { forceParentheses: false })).toStrictEqual({
             expression: "{content}",

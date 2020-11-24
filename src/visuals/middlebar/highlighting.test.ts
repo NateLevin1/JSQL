@@ -6,7 +6,7 @@ const checkFromStorage = require("./highlighting").default;
 
 test("works properly as undefined", ()=>{
     window.localStorage.__proto__.getItem = jest.fn((name)=>{ return undefined; });
-    expect(checkFromStorage()).toBe(true);
+    expect(checkFromStorage()).toBe(false);
     expect(localStorage.getItem).toBeCalledWith("sql-highlighting");
 });
 

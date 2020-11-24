@@ -31,6 +31,42 @@ test("works with multiple", ()=>{
     });
 });
 
+test("works with multiple with keywords", ()=>{
+    expect(parseMultiPredicate(" x = true, y = 2")).toStrictEqual({
+        predicates: [
+            {
+                left: "x",
+                operator: "=",
+                right: "true"
+            },
+            {
+                left: "y",
+                operator: "=",
+                right: "2"
+            }
+        ],
+        rest:""
+    });
+});
+
+test("works with multiple, space between comma", ()=>{
+    expect(parseMultiPredicate(" x = 1 , y = 2")).toStrictEqual({
+        predicates: [
+            {
+                left: "x",
+                operator: "=",
+                right: "1"
+            },
+            {
+                left: "y",
+                operator: "=",
+                right: "2"
+            }
+        ],
+        rest:""
+    });
+});
+
 test("stops at WHERE", ()=>{
     expect(parseMultiPredicate(" x = 1 WHERE y = 3")).toStrictEqual({
         predicates: [
@@ -40,7 +76,7 @@ test("stops at WHERE", ()=>{
                 right: "1"
             }
         ],
-        rest:" WHERE y = 3"
+        rest:"WHERE y = 3"
     });
 });
 
@@ -53,6 +89,6 @@ test("stops if ending whitespace", ()=>{
                 right: "1"
             }
         ],
-        rest:" "
+        rest:""
     });
 });

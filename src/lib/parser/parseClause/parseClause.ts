@@ -69,7 +69,7 @@ export function parseClause(str: string) {
                 restOfStr = parsedExpression.rest;
                 break;
             case "multi_predicate":
-                const parsedMultiPredicate =  parseMultiPredicate(restOfStr);
+                const parsedMultiPredicate = parseMultiPredicate(restOfStr);
                 clauseAST.items.push(parsedMultiPredicate.predicates);
                 restOfStr = parsedMultiPredicate.rest;
                 break;
